@@ -1,0 +1,1318 @@
+/* Tema do painel (pedido do dono, 12/11/2026): claro e escuro, organizado como a referência
+   (superfícies em cartões, cantos arredondados, botões em pílula pretos) e com o design do site
+   (creme, escuro, rosa de destaque, fonte Urbanist). O escuro segue o Fluxora (quase preto, vidro).
+   Para trocar: avatar no canto > Configurações > Aparência > Claro / Escuro / Sistema.
+   Só troca cores e formas do Sveltia; o funcionamento continua o mesmo. */
+@font-face {
+  font-family: 'Urbanist';
+  font-style: normal;
+  font-weight: 300 800;
+  font-display: swap;
+  src: url('/fonts/urbanist-latin.woff2') format('woff2');
+}
+
+/* Comum aos dois modos */
+:root,
+:root[data-theme] {
+  --sui-font-family-default: 'Urbanist', ui-sans-serif, system-ui, sans-serif !important;
+  --sui-control-font-family: 'Urbanist', ui-sans-serif, system-ui, sans-serif !important;
+  --sui-textbox-font-family: 'Urbanist', ui-sans-serif, system-ui, sans-serif !important;
+  --sui-base-hue: 36 !important;
+  --sui-primary-accent-color: #eb4d6d !important;
+  --sui-primary-accent-color-light: #f27a92 !important;
+  --sui-primary-accent-color-dark: #c93453 !important;
+  --sui-primary-accent-color-inverted: #ffffff !important;
+  --sui-primary-accent-color-translucent: rgb(235 77 109 / 0.14) !important;
+  --sui-focus-ring-color: rgb(235 77 109 / 0.55) !important;
+  /* Cantos suaves nas caixas e pílula só nos botões (raio gigante nas caixas deformava as listas) */
+  --sui-control-medium-border-radius: 10px !important;
+  --sui-button-small-border-radius: 9999px !important;
+  --sui-button-medium-border-radius: 9999px !important;
+  --sui-button-large-border-radius: 9999px !important;
+  --sui-textbox-border-radius: 12px !important;
+}
+
+/* Claro: creme do site, cartões brancos, texto escuro */
+:root,
+:root[data-theme='light'] {
+  color-scheme: light;
+  --sui-background-color-1-hsl: 0 0% 100% !important;
+  --sui-background-color-2-hsl: 36 50% 97% !important;
+  --sui-background-color-3-hsl: 36 24% 94% !important;
+  --sui-background-color-4-hsl: 36 16% 90% !important;
+  --sui-background-color-5-hsl: 36 10% 80% !important;
+  --sui-foreground-color-1-hsl: 0 0% 7% !important;
+  --sui-foreground-color-2-hsl: 0 0% 15% !important;
+  --sui-foreground-color-3-hsl: 0 0% 32% !important;
+  --sui-foreground-color-4-hsl: 0 0% 45% !important;
+  --sui-foreground-color-5-hsl: 0 0% 60% !important;
+  --sui-border-color-1-hsl: 36 10% 72% !important;
+  --sui-border-color-2-hsl: 36 12% 84% !important;
+  --sui-border-color-3-hsl: 36 14% 90% !important;
+  --sui-primary-accent-color-text: #c93453 !important;
+  /* Item selecionado: rosa claro (preto deixava o texto escuro invisível) */
+  --sui-selected-background-color: rgb(235 77 109 / 0.14) !important;
+  --sui-hover-background-color: rgb(17 17 17 / 0.05) !important;
+  --sui-active-background-color: rgb(17 17 17 / 0.08) !important;
+  --sui-textbox-background-color: #ffffff !important;
+  --sui-shadow-color: rgb(17 17 17 / 0.12) !important;
+  --sui-popup-backdrop-color: rgb(17 17 17 / 0.3) !important;
+}
+
+/* Escuro: Fluxora (quase preto, superfícies de vidro) */
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --sui-background-color-1-hsl: 0 0% 6% !important;
+  --sui-background-color-2-hsl: 0 0% 4% !important;
+  --sui-background-color-3-hsl: 0 0% 10% !important;
+  --sui-background-color-4-hsl: 0 0% 14% !important;
+  --sui-background-color-5-hsl: 0 0% 24% !important;
+  --sui-foreground-color-1-hsl: 0 0% 98% !important;
+  --sui-foreground-color-2-hsl: 0 0% 85% !important;
+  --sui-foreground-color-3-hsl: 0 0% 70% !important;
+  --sui-foreground-color-4-hsl: 0 0% 55% !important;
+  --sui-foreground-color-5-hsl: 0 0% 40% !important;
+  --sui-border-color-1-hsl: 0 0% 32% !important;
+  --sui-border-color-2-hsl: 0 0% 20% !important;
+  --sui-border-color-3-hsl: 0 0% 14% !important;
+  --sui-primary-accent-color-text: #f27a92 !important;
+  --sui-selected-background-color: rgb(255 255 255 / 0.1) !important;
+  --sui-hover-background-color: rgb(255 255 255 / 0.05) !important;
+  --sui-active-background-color: rgb(255 255 255 / 0.08) !important;
+  --sui-textbox-background-color: rgb(255 255 255 / 0.04) !important;
+  --sui-shadow-color: rgb(0 0 0 / 0.6) !important;
+  --sui-popup-backdrop-color: rgb(0 0 0 / 0.55) !important;
+}
+
+/* Fundo: creme no claro; quase preto com um brilho rosado discreto no escuro */
+body {
+  background: hsl(36 50% 97%) !important;
+}
+
+:root[data-theme='dark'] body {
+  background:
+    radial-gradient(60% 50% at 100% 0%, rgb(235 77 109 / 0.08), transparent 70%),
+    #0a0a0a !important;
+}
+
+h1,
+h2,
+h3 {
+  letter-spacing: -0.02em;
+}
+
+/* Estilo Aethra (pedido do dono, 12/11/2026): ícones maiores, cartões bem arredondados, item ativo em pílula */
+.material-symbols-outlined {
+  font-size: 22px !important;
+}
+
+:root,
+:root[data-theme] {
+  --sui-control-large-border-radius: 16px !important;
+  --sui-listbox-border-radius: 16px !important;
+  --sui-menu-border-radius: 16px !important;
+  --sui-option-border-radius: 12px !important;
+  --sui-tree-item-border-radius: 9999px !important;
+  --sui-control-medium-height: 40px !important;
+}
+
+/* Tela inicial do painel */
+.ep-inicio {
+  max-width: 980px;
+  padding: 40px 32px;
+}
+
+.ep-inicio h1 {
+  margin: 0;
+  font-size: 40px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.ep-sub {
+  margin: 8px 0 28px;
+  font-size: 17px;
+  opacity: 0.7;
+}
+
+.ep-grade {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+
+.ep-cartao {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 22px;
+  border: 1px solid hsl(var(--sui-border-color-2-hsl));
+  border-radius: 24px;
+  background: hsl(var(--sui-background-color-1-hsl));
+  color: inherit;
+  text-decoration: none;
+  transition:
+    border-color 0.25s ease,
+    transform 0.25s ease;
+}
+
+.ep-cartao:hover,
+.ep-cartao:focus-visible {
+  border-color: #eb4d6d;
+  transform: translateY(-2px);
+}
+
+.ep-icone {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgb(235 77 109 / 0.12);
+  color: #eb4d6d;
+  font-size: 26px !important;
+}
+
+.ep-textos {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ep-textos b {
+  font-size: 17px;
+}
+
+.ep-textos span {
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+.ep-seta {
+  opacity: 0.5;
+}
+
+.ep-dica {
+  margin-top: 24px;
+  padding: 14px 18px;
+  border: 1px dashed hsl(var(--sui-border-color-2-hsl));
+  border-radius: 18px;
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+/* Menu lateral no estilo Aethra: itens mais altos, ícone maior, ativo em pílula rosa clara */
+:root,
+:root[data-theme] {
+  --sui-option-height: 44px !important;
+}
+
+/* Tela Início no estilo FacilityFlow (pedido do dono): tabela à esquerda, números e atalhos à direita */
+.ep-inicio {
+  max-width: none;
+  padding: 28px 28px 40px;
+}
+
+.ep-cabeca h1 {
+  margin: 0;
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.ep-cabeca .ep-sub {
+  margin: 4px 0 22px;
+}
+
+.ep-colunas {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 18px;
+  align-items: start;
+}
+
+@media (max-width: 1100px) {
+  .ep-colunas {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ep-painel {
+  padding: 18px 20px;
+  border: 1px solid hsl(var(--sui-border-color-3-hsl));
+  border-radius: 24px;
+  background: hsl(var(--sui-background-color-1-hsl));
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.04);
+}
+
+.ep-lateral {
+  display: grid;
+  gap: 18px;
+}
+
+.ep-rotulo {
+  margin: 0;
+  font-size: 13px;
+  opacity: 0.55;
+}
+
+.ep-tabela-topo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.ep-tabela-topo h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.ep-busca {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1 1 220px;
+  max-width: 320px;
+  margin-left: auto;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: hsl(var(--sui-background-color-3-hsl));
+}
+
+.ep-busca input {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  outline: none;
+}
+
+.ep-botao-escuro {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: #111111;
+  color: #faf7f3 !important;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+:root[data-theme='dark'] .ep-botao-escuro {
+  background: #faf7f3;
+  color: #111111 !important;
+}
+
+.ep-linha {
+  display: grid;
+  grid-template-columns: minmax(0, 2.2fr) minmax(0, 1fr) 110px 56px 230px;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 6px;
+  border-top: 1px dashed hsl(var(--sui-border-color-3-hsl));
+}
+
+.ep-cabecalho {
+  padding: 10px 14px;
+  border: 0;
+  border-radius: 14px;
+  background: hsl(var(--sui-background-color-3-hsl));
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+.ep-projeto {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.ep-projeto img {
+  width: 56px;
+  height: 40px;
+  flex: none;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.ep-projeto span {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.ep-projeto b,
+.ep-projeto small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ep-projeto small,
+.ep-area,
+.ep-ano {
+  font-size: 13px;
+  opacity: 0.65;
+}
+
+.ep-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgb(34 197 94 / 0.12);
+  color: #15803d;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+:root[data-theme='dark'] .ep-status {
+  color: #4ade80;
+}
+
+.ep-status i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.ep-acoes {
+  display: flex;
+  gap: 4px;
+  justify-content: flex-end;
+}
+
+.ep-acoes a {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  color: inherit;
+  font-size: 18px !important;
+  text-decoration: none;
+  opacity: 0.6;
+}
+
+.ep-acoes a:hover {
+  background: rgb(235 77 109 / 0.12);
+  color: #eb4d6d;
+  opacity: 1;
+}
+
+.ep-rodape-tabela {
+  margin: 12px 6px 0;
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+.ep-rodape-tabela a {
+  color: #eb4d6d;
+}
+
+.ep-vazio {
+  padding: 20px 6px;
+  opacity: 0.6;
+}
+
+.ep-numero {
+  margin: 6px 0 0;
+  font-size: 44px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.ep-legenda {
+  margin: 4px 0 14px;
+  font-size: 13px;
+  opacity: 0.6;
+}
+
+.ep-barras {
+  display: grid;
+  gap: 10px;
+}
+
+.ep-barra {
+  display: grid;
+  grid-template-columns: 120px 1fr 24px;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+}
+
+.ep-barra b {
+  text-align: right;
+}
+
+.ep-trilho {
+  height: 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: hsl(var(--sui-background-color-3-hsl));
+}
+
+.ep-trilho span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #eb4d6d;
+}
+
+.ep-atalhos {
+  display: grid;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.ep-atalho {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 18px;
+  background: hsl(var(--sui-background-color-3-hsl));
+  color: inherit;
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+
+.ep-atalho:hover {
+  background: rgb(235 77 109 / 0.1);
+}
+
+.ep-atalho .ep-icone {
+  width: 40px;
+  height: 40px;
+  font-size: 22px !important;
+}
+
+/* Início: abas Publicados e Rascunhos, e o botão de um clique para publicar ou tornar rascunho */
+.ep-abas {
+  display: inline-flex;
+  gap: 4px;
+  margin-top: 6px;
+  padding: 4px;
+  border-radius: 999px;
+  background: hsl(var(--sui-background-color-3-hsl));
+}
+
+.ep-aba {
+  padding: 8px 16px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  opacity: 0.65;
+}
+
+.ep-aba.ativa {
+  background: hsl(var(--sui-background-color-1-hsl));
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.12);
+  opacity: 1;
+}
+
+.ep-status.rascunho {
+  background: rgb(245 158 11 / 0.14);
+  color: #b45309;
+}
+
+:root[data-theme='dark'] .ep-status.rascunho {
+  color: #fbbf24;
+}
+
+.ep-sem-capa {
+  display: grid !important;
+  place-items: center;
+  width: 56px;
+  height: 40px;
+  flex: none;
+  border-radius: 10px;
+  background: hsl(var(--sui-background-color-3-hsl));
+  font-size: 20px !important;
+  opacity: 0.7;
+}
+
+.ep-acoes {
+  align-items: center;
+}
+
+.ep-trocar {
+  margin-right: 4px;
+  padding: 7px 14px;
+  border: 1px solid hsl(var(--sui-border-color-3-hsl));
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.ep-trocar:hover {
+  border-color: #eb4d6d;
+  color: #eb4d6d;
+}
+
+.ep-trocar.publicar {
+  border-color: #eb4d6d;
+  background: #eb4d6d;
+  color: #ffffff;
+}
+
+.ep-trocar.publicar:hover {
+  color: #ffffff;
+  filter: brightness(1.08);
+}
+
+.ep-trocar:disabled {
+  cursor: wait;
+  opacity: 0.5;
+}
+
+.ep-aviso {
+  margin: 14px 6px 0;
+  padding: 12px 16px;
+  border-radius: 14px;
+  background: rgb(235 77 109 / 0.1);
+  font-size: 14px;
+}
+
+@media (max-width: 900px) {
+  .ep-linha {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .ep-linha > .ep-area,
+  .ep-linha > .ep-ano,
+  .ep-cabecalho {
+    display: none;
+  }
+}
+
+/* Início: ícones dos atalhos centralizados e sem sublinhado (o painel sublinhava os links) */
+.ep-inicio a,
+.ep-inicio a * {
+  text-decoration: none !important;
+}
+
+.ep-atalho .ep-icone,
+.ep-atalho .ep-seta {
+  display: grid !important;
+  place-items: center;
+  flex: none;
+  line-height: 1 !important;
+}
+
+.ep-atalho .ep-seta {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 18px !important;
+  opacity: 0.55;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.ep-atalho:hover .ep-seta {
+  transform: translate(2px, -2px);
+  color: #eb4d6d;
+  opacity: 1;
+}
+
+/* Início em vidro fosco (pedido do dono): manchas de cor ao fundo e painéis translúcidos com desfoque */
+.ep-inicio {
+  position: relative;
+  isolation: isolate;
+  min-height: 100%;
+}
+
+.ep-inicio .ep-painel {
+  border: 1px solid rgb(255 255 255 / 0.6);
+  background: rgb(255 255 255 / 0.55);
+  box-shadow: 0 10px 40px -18px rgb(0 0 0 / 0.25), inset 0 1px 0 rgb(255 255 255 / 0.7);
+  -webkit-backdrop-filter: blur(22px) saturate(140%);
+  backdrop-filter: blur(22px) saturate(140%);
+}
+
+.ep-inicio .ep-atalho,
+.ep-inicio .ep-cabecalho,
+.ep-inicio .ep-busca,
+.ep-inicio .ep-abas {
+  border: 1px solid rgb(255 255 255 / 0.5);
+  background: rgb(255 255 255 / 0.45);
+}
+
+.ep-inicio .ep-atalho:hover {
+  background: rgb(235 77 109 / 0.12);
+}
+
+:root[data-theme='dark'] .ep-inicio .ep-painel {
+  border-color: rgb(255 255 255 / 0.1);
+  background: rgb(255 255 255 / 0.05);
+  box-shadow: 0 10px 40px -18px rgb(0 0 0 / 0.6), inset 0 1px 0 rgb(255 255 255 / 0.08);
+}
+
+:root[data-theme='dark'] .ep-inicio .ep-atalho,
+:root[data-theme='dark'] .ep-inicio .ep-cabecalho,
+:root[data-theme='dark'] .ep-inicio .ep-busca,
+:root[data-theme='dark'] .ep-inicio .ep-abas {
+  border-color: rgb(255 255 255 / 0.08);
+  background: rgb(255 255 255 / 0.05);
+}
+
+:root[data-theme='dark'] .ep-inicio .ep-atalho:hover {
+  background: rgb(235 77 109 / 0.16);
+}
+
+:root[data-theme='dark'] .ep-inicio .ep-aba.ativa {
+  background: rgb(255 255 255 / 0.14);
+}
+
+/* Vidro fosco no painel inteiro (pedido do dono): as manchas de cor ficam no fundo da página
+   e as superfícies do Sveltia passam a ser translúcidas. Para desfazer, apague deste comentário até o fim
+   (ponto de restauração: tag antes-do-vidro-no-painel). */
+body {
+  background:
+    radial-gradient(38% 34% at 10% 6%, rgb(235 77 109 / 0.26), transparent 70%),
+    radial-gradient(34% 36% at 94% 28%, rgb(124 92 255 / 0.18), transparent 70%),
+    radial-gradient(40% 36% at 55% 100%, rgb(255 170 90 / 0.16), transparent 70%),
+    hsl(36 50% 97%) !important;
+  background-attachment: fixed !important;
+}
+
+:root[data-theme='dark'] body {
+  background:
+    radial-gradient(38% 34% at 10% 6%, rgb(235 77 109 / 0.24), transparent 70%),
+    radial-gradient(34% 36% at 94% 28%, rgb(124 92 255 / 0.18), transparent 70%),
+    radial-gradient(40% 36% at 55% 100%, rgb(255 140 70 / 0.1), transparent 70%),
+    #0a0a0a !important;
+  background-attachment: fixed !important;
+}
+
+:root,
+:root[data-theme='light'] {
+  --sui-primary-background-color: rgb(250 247 243 / 0.45) !important;
+  --sui-secondary-background-color: rgb(255 255 255 / 0.5) !important;
+  --sui-tertiary-background-color: rgb(255 255 255 / 0.38) !important;
+  --sui-content-background-color: rgb(255 255 255 / 0.6) !important;
+  --sui-tree-background-color: transparent !important;
+}
+
+:root[data-theme='dark'] {
+  --sui-primary-background-color: rgb(10 10 10 / 0.4) !important;
+  --sui-secondary-background-color: rgb(255 255 255 / 0.05) !important;
+  --sui-tertiary-background-color: rgb(255 255 255 / 0.08) !important;
+  --sui-content-background-color: rgb(255 255 255 / 0.04) !important;
+  --sui-tree-background-color: transparent !important;
+}
+
+/* Barras e cabeçalhos que ficam por cima do conteúdo ao rolar: desfoque para o texto de trás não atrapalhar */
+[role='toolbar'],
+[role='columnheader'],
+[role='rowheader'],
+.grid-col-header,
+.group-header,
+.secondary-sidebar,
+.primary-sidebar {
+  -webkit-backdrop-filter: blur(22px) saturate(140%);
+  backdrop-filter: blur(22px) saturate(140%);
+}
+
+/* Janelas, menus e listas que abrem por cima continuam sólidos, para ler sem esforço */
+dialog,
+[popover],
+[role='dialog'],
+[role='alertdialog'],
+[role='menu'],
+[role='listbox'] {
+  --sui-primary-background-color: hsl(var(--sui-background-color-2-hsl)) !important;
+  --sui-secondary-background-color: hsl(var(--sui-background-color-3-hsl)) !important;
+  --sui-tertiary-background-color: hsl(var(--sui-background-color-4-hsl)) !important;
+  --sui-content-background-color: hsl(var(--sui-background-color-1-hsl)) !important;
+}
+
+/* Início: cartões de números no topo, barras por ano e lista "Para completar" */
+.ep-cartoes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.ep-cartao {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px !important;
+}
+
+.ep-cartao .ep-icone {
+  display: grid !important;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  font-size: 22px !important;
+  line-height: 1 !important;
+}
+
+.ep-cartao-textos {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.ep-cartao-textos b {
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.ep-cartao-textos span {
+  font-size: 13px;
+  opacity: 0.65;
+}
+
+.ep-rotulo-ano {
+  margin: 18px 0 10px;
+}
+
+.ep-faltas {
+  display: grid;
+  gap: 8px;
+  max-height: 260px;
+  margin-top: 10px;
+  overflow: auto;
+}
+
+.ep-falta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: rgb(245 158 11 / 0.1);
+  color: inherit;
+  font-size: 14px;
+}
+
+.ep-falta span {
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+.ep-falta:hover {
+  background: rgb(235 77 109 / 0.12);
+}
+
+/* Vidro nas outras telas: o fundo com as manchas aparece de verdade (antes ficava creme sobre creme)
+   e a área principal vira um cartão de vidro. As classes svelte-... valem para o Sveltia 0.253.2 deste painel. */
+body {
+  background:
+    radial-gradient(42% 40% at 6% 0%, rgb(235 77 109 / 0.42), transparent 70%),
+    radial-gradient(38% 42% at 100% 22%, rgb(124 92 255 / 0.3), transparent 70%),
+    radial-gradient(46% 42% at 50% 105%, rgb(255 160 80 / 0.3), transparent 70%),
+    hsl(36 50% 96%) !important;
+  background-attachment: fixed !important;
+}
+
+:root[data-theme='dark'] body {
+  background:
+    radial-gradient(42% 40% at 6% 0%, rgb(235 77 109 / 0.34), transparent 70%),
+    radial-gradient(38% 42% at 100% 22%, rgb(124 92 255 / 0.26), transparent 70%),
+    radial-gradient(46% 42% at 50% 105%, rgb(255 140 70 / 0.16), transparent 70%),
+    #0a0a0a !important;
+  background-attachment: fixed !important;
+}
+
+.app-shell {
+  background: transparent !important;
+}
+
+:root,
+:root[data-theme='light'] {
+  --sui-primary-background-color: rgb(255 255 255 / 0.3) !important;
+  --sui-secondary-background-color: rgb(255 255 255 / 0.42) !important;
+}
+
+:root[data-theme='dark'] {
+  --sui-primary-background-color: rgb(255 255 255 / 0.03) !important;
+  --sui-secondary-background-color: rgb(255 255 255 / 0.05) !important;
+}
+
+/* Área principal (ao lado do menu) como cartão de vidro */
+.resizable-pane > .wrapper {
+  margin: 0 10px 10px 0;
+  border: 1px solid rgb(255 255 255 / 0.65) !important;
+  border-radius: 22px !important;
+  background: rgb(255 255 255 / 0.42) !important;
+  box-shadow: 0 14px 44px -22px rgb(0 0 0 / 0.3), inset 0 1px 0 rgb(255 255 255 / 0.7);
+  -webkit-backdrop-filter: blur(26px) saturate(150%);
+  backdrop-filter: blur(26px) saturate(150%);
+}
+
+:root[data-theme='dark'] .resizable-pane > .wrapper {
+  border-color: rgb(255 255 255 / 0.1) !important;
+  background: rgb(255 255 255 / 0.04) !important;
+  box-shadow: 0 14px 44px -22px rgb(0 0 0 / 0.7), inset 0 1px 0 rgb(255 255 255 / 0.08);
+}
+
+/* Tela de edição do projeto: cobre a tela inteira, então leva o mesmo fundo (senão a lista de trás apareceria) */
+.wrapper.svelte-jrunrx {
+  background:
+    radial-gradient(42% 40% at 6% 0%, rgb(235 77 109 / 0.42), transparent 70%),
+    radial-gradient(38% 42% at 100% 22%, rgb(124 92 255 / 0.3), transparent 70%),
+    radial-gradient(46% 42% at 50% 105%, rgb(255 160 80 / 0.3), transparent 70%),
+    hsl(36 50% 96%) !important;
+}
+
+:root[data-theme='dark'] .wrapper.svelte-jrunrx {
+  background:
+    radial-gradient(42% 40% at 6% 0%, rgb(235 77 109 / 0.34), transparent 70%),
+    radial-gradient(38% 42% at 100% 22%, rgb(124 92 255 / 0.26), transparent 70%),
+    radial-gradient(46% 42% at 50% 105%, rgb(255 140 70 / 0.16), transparent 70%),
+    #0a0a0a !important;
+}
+
+.content-area.svelte-jrunrx,
+.toolbar.svelte-1qyhxjh {
+  -webkit-backdrop-filter: blur(26px) saturate(150%);
+  backdrop-filter: blur(26px) saturate(150%);
+}
+
+/* Janelas, menus e listas que abrem por cima continuam sólidos (repetido aqui para valer sobre as regras acima) */
+dialog,
+[popover],
+[role='dialog'],
+[role='alertdialog'],
+[role='menu'],
+[role='listbox'] {
+  --sui-primary-background-color: hsl(var(--sui-background-color-2-hsl)) !important;
+  --sui-secondary-background-color: hsl(var(--sui-background-color-3-hsl)) !important;
+}
+
+/* Início: bloco Saúde do SEO */
+.ep-dica-seo {
+  margin: 12px 0 0 !important;
+}
+
+.ep-dica-seo a {
+  color: #eb4d6d;
+  text-decoration: underline !important;
+}
+
+/* Correção de glitch ao passar o mouse (12/11/2026): desfoque dentro de desfoque faz o navegador piscar.
+   O desfoque fica só na camada de fora (área principal e tela de edição); o que está dentro usa cor translúcida. */
+.ep-inicio .ep-painel,
+[role='toolbar'],
+[role='columnheader'],
+[role='rowheader'],
+.grid-col-header,
+.group-header,
+.secondary-sidebar,
+.primary-sidebar,
+.toolbar.svelte-1qyhxjh {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+/* Barras que ficam por cima do conteúdo ao rolar: quase sólidas, para o texto de trás não aparecer */
+.resizable-pane > .wrapper [role='columnheader'],
+.resizable-pane > .wrapper .group-header,
+.resizable-pane > .wrapper .grid-col-header,
+.toolbar.svelte-1qyhxjh {
+  background-color: rgb(252 250 247 / 0.94) !important;
+}
+
+:root[data-theme='dark'] .resizable-pane > .wrapper [role='columnheader'],
+:root[data-theme='dark'] .resizable-pane > .wrapper .group-header,
+:root[data-theme='dark'] .resizable-pane > .wrapper .grid-col-header,
+:root[data-theme='dark'] .toolbar.svelte-1qyhxjh {
+  background-color: rgb(22 22 22 / 0.94) !important;
+}
+
+/* Atalhos: só a cor muda no hover, sem mover a seta */
+.ep-atalho,
+.ep-atalho .ep-seta {
+  transition: background-color 0.2s ease, color 0.2s ease, opacity 0.2s ease !important;
+}
+
+.ep-atalho:hover .ep-seta {
+  transform: none !important;
+}
+
+/* Tela de Mensagens (Task 11) */
+.ep-msg-topo-aviso {
+  margin: 0 0 16px !important;
+}
+
+.ep-msg-grade {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.9fr) minmax(0, 1.6fr);
+  gap: 18px;
+  align-items: start;
+  margin-bottom: 18px;
+}
+
+@media (max-width: 1000px) {
+  .ep-msg-grade {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ep-msg-itens {
+  display: grid;
+  gap: 6px;
+  max-height: 64vh;
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+  list-style: none;
+}
+
+.ep-msg-item {
+  display: grid;
+  gap: 4px;
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid transparent;
+  border-radius: 16px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.ep-msg-item:hover {
+  background: rgb(235 77 109 / 0.08);
+}
+
+.ep-msg-item.ativa {
+  border-color: rgb(235 77 109 / 0.35);
+  background: rgb(235 77 109 / 0.12);
+}
+
+.ep-msg-nome {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.ep-msg-nome small,
+.ep-msg-trecho {
+  font-size: 13px;
+  opacity: 0.65;
+}
+
+.ep-msg-trecho {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ep-msg-alerta {
+  justify-self: start;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: rgb(245 158 11 / 0.16);
+  color: #b45309;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+:root[data-theme='dark'] .ep-msg-alerta {
+  color: #fbbf24;
+}
+
+.ep-msg-cabeca {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.ep-msg-cabeca h2 {
+  margin: 4px 0 0;
+  font-size: 26px;
+}
+
+.ep-msg-botoes {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ep-msg-campos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+  margin: 16px 0 20px;
+}
+
+.ep-msg-campo {
+  display: grid;
+  gap: 2px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: hsl(var(--sui-background-color-3-hsl) / 0.6);
+}
+
+.ep-msg-campo span {
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+.ep-msg-campo b {
+  overflow-wrap: anywhere;
+  font-weight: 600;
+}
+
+.ep-msg-texto {
+  margin: 8px 0 16px;
+  font-size: 16px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.ep-msg-destino {
+  margin: 6px 0 12px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.ep-msg-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-width: 520px;
+}
+
+.ep-msg-form input {
+  flex: 1 1 240px;
+  padding: 9px 14px;
+  border: 1px solid hsl(var(--sui-border-color-3-hsl));
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
+
+/* Início: aviso de publicação com falha (EDGE-012) e de publicação em andamento */
+.ep-falhou,
+.ep-publicando {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 16px;
+  padding: 12px 16px;
+  border-radius: 16px;
+  font-size: 14px;
+}
+
+.ep-falhou {
+  border: 1px solid rgb(220 38 38 / 0.4);
+  background: rgb(220 38 38 / 0.12);
+}
+
+.ep-falhou a {
+  color: inherit;
+  font-weight: 600;
+  text-decoration: underline !important;
+}
+
+.ep-publicando {
+  background: rgb(235 77 109 / 0.1);
+}
+
+/* Janela de confirmação do painel (confirmar.js) */
+.ep-confirmar {
+  width: min(440px, calc(100vw - 32px));
+  padding: 26px 26px 22px;
+  border: 1px solid rgb(255 255 255 / 0.6);
+  border-radius: 24px;
+  background: rgb(255 255 255 / 0.82);
+  box-shadow: 0 30px 80px -30px rgb(0 0 0 / 0.45);
+  color: hsl(var(--sui-foreground-color-1-hsl));
+  font-family: var(--sui-font-family-default);
+  -webkit-backdrop-filter: blur(26px) saturate(150%);
+  backdrop-filter: blur(26px) saturate(150%);
+}
+
+:root[data-theme='dark'] .ep-confirmar {
+  border-color: rgb(255 255 255 / 0.1);
+  background: rgb(24 24 24 / 0.86);
+}
+
+.ep-confirmar::backdrop {
+  background: rgb(0 0 0 / 0.45);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+
+.ep-confirmar h2 {
+  margin: 0 0 8px;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.ep-confirmar p {
+  margin: 0 0 22px;
+  font-size: 15px;
+  line-height: 1.5;
+  opacity: 0.8;
+}
+
+.ep-confirmar-botoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.ep-confirmar-botoes button {
+  padding: 10px 20px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.ep-confirmar-cancelar {
+  border-color: hsl(var(--sui-border-color-2-hsl)) !important;
+  background: transparent;
+  color: inherit;
+}
+
+.ep-confirmar-ok {
+  background: #eb4d6d;
+  color: #ffffff;
+}
+
+.ep-confirmar-ok.perigo {
+  background: #dc2626;
+}
+
+.ep-confirmar-botoes button:focus-visible {
+  outline: 2px solid #eb4d6d;
+  outline-offset: 3px;
+}
+
+/* Editor do projeto mais fácil de percorrer (pedido do dono, 12/11/2026; ajuste de alinhamento em 13/11/2026):
+   quadro de seção com título (::before) e explicação (::after) antes dos grupos de campos, alinhado com a
+   coluna dos campos (o painel limita os campos a 768px no centro). Só aparência: dados e campos não mudam. */
+
+section[data-key-path='publicado']::before { content: '1 · Situação e endereço'; }
+section[data-key-path='publicado']::after { content: 'Se o projeto está no site e qual é o endereço dele.'; }
+section[data-key-path='titulo']::before { content: '2 · Textos'; }
+section[data-key-path='titulo']::after { content: 'Título, categoria, áreas, ano e os textos da página, nos 3 idiomas.'; }
+section[data-key-path='seo']::before { content: '3 · Google e compartilhamento'; }
+section[data-key-path='seo']::after { content: 'Opcional. Como o projeto aparece na busca e ao enviar o link.'; }
+section[data-key-path='capa']::before { content: '4 · Capas'; }
+section[data-key-path='capa']::after { content: 'A imagem dos cards e do topo; a vertical é para o celular.'; }
+section[data-key-path='topo']::before { content: '5 · Topo da página'; }
+section[data-key-path='topo']::after { content: 'O que aparece logo abaixo do título: vídeo(s) ou a capa.'; }
+section[data-key-path='secoes']::before { content: '6 · Construtor'; }
+section[data-key-path='secoes']::after { content: 'Os blocos da página, na ordem: textos, galerias, carrosséis, vídeos e chamada.'; }
+section[data-key-path='galeria']::before { content: '7 · Galeria final'; }
+section[data-key-path='galeria']::after { content: 'Opcional. Fica no fim da página, antes de "Mais projetos".'; }
+
+/* Quadro: título na primeira linha; o espaço de baixo fica para a explicação */
+section[data-key-path='publicado']::before,
+section[data-key-path='titulo']::before,
+section[data-key-path='seo']::before,
+section[data-key-path='capa']::before,
+section[data-key-path='topo']::before,
+section[data-key-path='secoes']::before,
+section[data-key-path='galeria']::before {
+  display: block;
+  box-sizing: border-box;
+  max-width: 768px;
+  margin: 0 auto 20px;
+  padding: 16px 20px 42px;
+  border: 1px solid rgb(235 77 109 / 0.28);
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgb(235 77 109 / 0.18), rgb(235 77 109 / 0.05));
+  color: hsl(var(--sui-foreground-color-1-hsl));
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 24px;
+  letter-spacing: -0.01em;
+}
+
+/* Explicação: texto normal, dentro do quadro, logo abaixo do título (no lugar da linha divisória do painel) */
+section[data-key-path='publicado']::after,
+section[data-key-path='titulo']::after,
+section[data-key-path='seo']::after,
+section[data-key-path='capa']::after,
+section[data-key-path='topo']::after,
+section[data-key-path='secoes']::after,
+section[data-key-path='galeria']::after {
+  position: absolute !important;
+  inset: auto !important;
+  top: calc(var(--field-editor-padding, 16px) + 44px) !important;
+  left: calc(var(--field-editor-padding, 16px) + max(0px, (100% - 2 * var(--field-editor-padding, 16px) - 768px) / 2) + 21px) !important;
+  right: calc(var(--field-editor-padding, 16px) + max(0px, (100% - 2 * var(--field-editor-padding, 16px) - 768px) / 2) + 21px) !important;
+  height: auto !important;
+  overflow: hidden;
+  background: none !important;
+  color: hsl(var(--sui-foreground-color-2-hsl, var(--sui-foreground-color-1-hsl)));
+  font-size: 13.5px;
+  font-weight: 400;
+  line-height: 20px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  opacity: 0.85;
+}
+
+/* Espaço entre as seções (a primeira fica colada no topo) */
+section[data-key-path='publicado'],
+section[data-key-path='titulo'],
+section[data-key-path='seo'],
+section[data-key-path='capa'],
+section[data-key-path='topo'],
+section[data-key-path='secoes'],
+section[data-key-path='galeria'] {
+  margin-top: 28px !important;
+}
+
+section[data-key-path='publicado'] {
+  margin-top: 4px !important;
+}
+
+/* Rótulo de cada campo um pouco maior e mais forte que a dica */
+[data-key-path] > header h4,
+[data-key-path] > h4 {
+  font-size: 14px !important;
+  font-weight: 700 !important;
+}
+
+/* Itens dos blocos do construtor e do conteúdo do carrossel: borda rosa à esquerda para separar um do outro */
+[data-key-path^='secoes.'][data-field-type='object'],
+[data-key-path*='.conteudo.'][data-field-type='object'] {
+  border-left: 3px solid rgb(235 77 109 / 0.55);
+  border-radius: 12px;
+  padding-left: 12px !important;
+}

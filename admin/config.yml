@@ -1,0 +1,5535 @@
+# Painel (Sveltia CMS), Task 9. Gerado a partir do esquema do site (src/content.config.ts e os JSON de
+# src/content/config). JSON também é YAML válido. Mudou um campo no site? Mude aqui também.
+{
+  "backend": {
+    "name": "github",
+    "repo": "Elliot-Parker/portfolio",
+    "branch": "main",
+    "base_url": "https://elliotparker.com.br",
+    "auth_endpoint": "api/admin/auth",
+    "commit_messages": {
+      "create": "Painel: cria {{collection}} \"{{slug}}\"",
+      "update": "Painel: atualiza {{collection}} \"{{slug}}\"",
+      "delete": "Painel: apaga {{collection}} \"{{slug}}\"",
+      "uploadMedia": "Painel: envia \"{{path}}\"",
+      "deleteMedia": "Painel: apaga \"{{path}}\""
+    }
+  },
+  "app_title": "Painel Elliot Parker",
+  "logo": {
+    "src": "/uploads/site/favicon.png",
+    "show_in_header": true
+  },
+  "site_url": "https://elliotparker.com.br",
+  "display_url": "https://elliotparker.com.br",
+  "media_folder": "/public/uploads",
+  "public_folder": "/uploads",
+  "media_libraries": {
+    "default": {
+      "config": {
+        "max_file_size": 10000000,
+        "slugify_filename": true,
+        "transformations": {
+          "raster_image": {
+            "format": "webp",
+            "quality": 85,
+            "width": 2560,
+            "height": 2560
+          }
+        }
+      }
+    }
+  },
+  "slug": {
+    "encoding": "ascii",
+    "clean_accents": true
+  },
+  "collections": [
+    {
+      "name": "projetos",
+      "label": "Publicados",
+      "label_singular": "Projeto",
+      "icon": "public",
+      "folder": "src/content/projetos",
+      "extension": "json",
+      "format": "json",
+      "create": true,
+      "delete": true,
+      "identifier_field": "url",
+      "slug": "{{url}}",
+      "summary": "{{titulo.pt}}  ·  {{publicado | ternary('Publicado', 'Rascunho')}}  ·  {{categoria.pt}}  ·  {{ano}}",
+      "view_filters": [
+        {
+          "label": "Edição & Motion",
+          "field": "areas",
+          "pattern": "edicao-motion"
+        },
+        {
+          "label": "UI Design",
+          "field": "areas",
+          "pattern": "ui-design"
+        },
+        {
+          "label": "Design",
+          "field": "areas",
+          "pattern": "design"
+        },
+        {
+          "label": "Fotografia com IA",
+          "field": "areas",
+          "pattern": "fotografia-ia"
+        },
+        {
+          "label": "Web & Produto",
+          "field": "areas",
+          "pattern": "web-produto"
+        }
+      ],
+      "view_groups": [
+        {
+          "label": "Situação",
+          "field": "publicado"
+        },
+        {
+          "label": "Ano",
+          "field": "ano"
+        }
+      ],
+      "media_folder": "/public/uploads/projetos/{{slug}}",
+      "public_folder": "/uploads/projetos/{{slug}}",
+      "sortable_fields": {
+        "fields": [
+          "commit_date",
+          "titulo.pt",
+          "ano"
+        ],
+        "default": {
+          "field": "commit_date",
+          "direction": "descending"
+        }
+      },
+      "editor": {
+        "preview": true
+      },
+      "preview_path": "work/{{slug}}",
+      "fields": [
+        {
+          "name": "publicado",
+          "label": "Publicado no site",
+          "widget": "boolean",
+          "default": false,
+          "hint": "Desligado = rascunho: o projeto não aparece no site."
+        },
+        {
+          "name": "url",
+          "label": "Endereço (URL)",
+          "widget": "string",
+          "pattern": [
+            "^[a-z0-9]+(?:[.-][a-z0-9]+)*$",
+            "Só letras minúsculas sem acento, números, hífen e ponto"
+          ],
+          "hint": "Fica em elliotparker.com.br/work/endereço. Não pode repetir nem ser admin, api, work, en, es ou 404."
+        },
+        {
+          "name": "titulo",
+          "label": "Título",
+          "widget": "object",
+          "collapsed": false,
+          "fields": [
+            {
+              "name": "pt",
+              "label": "Português",
+              "widget": "string",
+              "required": true
+            },
+            {
+              "name": "en",
+              "label": "English",
+              "widget": "string",
+              "required": false
+            },
+            {
+              "name": "es",
+              "label": "Español",
+              "widget": "string",
+              "required": false
+            }
+          ]
+        },
+        {
+          "name": "categoria",
+          "label": "Categoria",
+          "widget": "object",
+          "collapsed": false,
+          "fields": [
+            {
+              "name": "pt",
+              "label": "Português",
+              "widget": "string",
+              "required": true
+            },
+            {
+              "name": "en",
+              "label": "English",
+              "widget": "string",
+              "required": false
+            },
+            {
+              "name": "es",
+              "label": "Español",
+              "widget": "string",
+              "required": false
+            }
+          ],
+          "hint": "Ex.: Edição criativa, Poster, UI Design"
+        },
+        {
+          "name": "areas",
+          "label": "Áreas (filtros de Trabalhos)",
+          "widget": "relation",
+          "multiple": true,
+          "collection": "trabalhos",
+          "file": "trabalhos",
+          "value_field": "filtros.areas.*.id",
+          "search_fields": [
+            "filtros.areas.*.rotulo.pt"
+          ],
+          "display_fields": [
+            "filtros.areas.*.rotulo.pt"
+          ],
+          "hint": "Escolha uma ou mais. Áreas novas: Configurações > Página Trabalhos."
+        },
+        {
+          "name": "ano",
+          "label": "Ano",
+          "widget": "number",
+          "value_type": "int",
+          "required": false,
+          "min": 1900,
+          "max": 2100
+        },
+        {
+          "name": "siteAoVivo",
+          "label": "Site ao vivo (botão Live View)",
+          "widget": "string",
+          "required": false,
+          "pattern": [
+            "^https://[^s\"'<>]+$",
+            "Use um link que comece com https://"
+          ],
+          "hint": "Link do site real. Preenchido, aparece o botão \"Live View\" no topo do projeto, abrindo o site em outra aba. Vazio, o botão não aparece."
+        },
+        {
+          "name": "resumoCard",
+          "label": "Texto curto do card",
+          "widget": "object",
+          "collapsed": false,
+          "fields": [
+            {
+              "name": "pt",
+              "label": "Português",
+              "widget": "string",
+              "required": false
+            },
+            {
+              "name": "en",
+              "label": "English",
+              "widget": "string",
+              "required": false
+            },
+            {
+              "name": "es",
+              "label": "Español",
+              "widget": "string",
+              "required": false
+            }
+          ],
+          "hint": "Opcional. Vazio: o card usa o começo do resumo.",
+          "required": false
+        },
+        {
+          "name": "resumo",
+          "label": "Resumo (topo da página)",
+          "widget": "object",
+          "collapsed": false,
+          "fields": [
+            {
+              "name": "pt",
+              "label": "Português",
+              "widget": "text",
+              "required": true
+            },
+            {
+              "name": "en",
+              "label": "English",
+              "widget": "text",
+              "required": false
+            },
+            {
+              "name": "es",
+              "label": "Español",
+              "widget": "text",
+              "required": false
+            }
+          ]
+        },
+        {
+          "name": "sobre",
+          "label": "Sobre o projeto",
+          "widget": "object",
+          "collapsed": false,
+          "fields": [
+            {
+              "name": "pt",
+              "label": "Português",
+              "widget": "text",
+              "required": true
+            },
+            {
+              "name": "en",
+              "label": "English",
+              "widget": "text",
+              "required": false
+            },
+            {
+              "name": "es",
+              "label": "Español",
+              "widget": "text",
+              "required": false
+            }
+          ],
+          "hint": "Parágrafos separados por linha em branco. ***texto*** fica em negrito e itálico."
+        },
+        {
+          "name": "seo",
+          "label": "SEO (opcional)",
+          "widget": "object",
+          "required": false,
+          "collapsed": true,
+          "hint": "Como o projeto aparece no Google e ao compartilhar o link. Vazio: usa o título e o começo do resumo.",
+          "fields": [
+            {
+              "name": "titulo",
+              "label": "Título nos buscadores",
+              "widget": "object",
+              "collapsed": false,
+              "fields": [
+                {
+                  "name": "pt",
+                  "label": "Português",
+                  "widget": "string",
+                  "required": false
+                },
+                {
+                  "name": "en",
+                  "label": "English",
+                  "widget": "string",
+                  "required": false
+                },
+                {
+                  "name": "es",
+                  "label": "Español",
+                  "widget": "string",
+                  "required": false
+                }
+              ],
+              "hint": "Ideal: até 60 letras.",
+              "required": false
+            },
+            {
+              "name": "descricao",
+              "label": "Descrição nos buscadores",
+              "widget": "object",
+              "collapsed": false,
+              "fields": [
+                {
+                  "name": "pt",
+                  "label": "Português",
+                  "widget": "text",
+                  "required": false
+                },
+                {
+                  "name": "en",
+                  "label": "English",
+                  "widget": "text",
+                  "required": false
+                },
+                {
+                  "name": "es",
+                  "label": "Español",
+                  "widget": "text",
+                  "required": false
+                }
+              ],
+              "hint": "Ideal: de 70 a 160 letras.",
+              "required": false
+            }
+          ]
+        },
+        {
+          "name": "capa",
+          "label": "Capa (horizontal)",
+          "widget": "image",
+          "hint": "Até 10 MB. Vira WebP sozinha."
+        },
+        {
+          "name": "capaVertical",
+          "label": "Capa vertical (celular)",
+          "widget": "image",
+          "required": false,
+          "hint": "Opcional, de preferência 3:4. Sem ela, o celular recorta a capa horizontal."
+        },
+        {
+          "name": "topo",
+          "label": "O que aparece no topo",
+          "widget": "select",
+          "default": "video",
+          "options": [
+            {
+              "label": "Vídeo(s) do YouTube ou Vimeo",
+              "value": "video"
+            },
+            {
+              "label": "Capa (imagem)",
+              "value": "capa"
+            },
+            {
+              "label": "Vídeo em loop (MP4 do site, sem som)",
+              "value": "loop"
+            }
+          ],
+          "hint": "Vídeo sem nenhum vídeo cadastrado mostra a capa. Vídeo em loop sem o arquivo MP4 também mostra a capa."
+        },
+        {
+          "name": "capaVideo",
+          "label": "Vídeo em loop do topo (MP4)",
+          "widget": "file",
+          "required": false,
+          "accept": "video/mp4",
+          "hint": "Só para \"Vídeo em loop\". MP4 curto e sem som (até 10 MB), roda sozinho e repete. Para tirar, apague o arquivo aqui e escolha outra opção no topo. A capa continua sendo a imagem dos cards."
+        },
+        {
+          "name": "videos",
+          "label": "Vídeos do topo",
+          "label_singular": "Vídeo",
+          "widget": "list",
+          "required": false,
+          "summary": "{{link}}",
+          "fields": [
+            {
+              "name": "link",
+              "label": "Link do vídeo (YouTube ou Vimeo)",
+              "widget": "string",
+              "pattern": [
+                "^https:\\/\\/(?:www\\.)?(?:youtube\\.com\\/(?:watch\\?v=|shorts\\/|embed\\/)[\\w-]{11}(?:[?&][\\w=&%.-]*)?|youtu\\.be\\/[\\w-]{11}(?:\\?[\\w=&%.-]*)?|vimeo\\.com\\/\\d+|player\\.vimeo\\.com\\/video\\/\\d+)$",
+                "Use um link do YouTube ou do Vimeo"
+              ]
+            },
+            {
+              "name": "formato",
+              "label": "Formato do vídeo",
+              "widget": "select",
+              "default": "horizontal",
+              "hint": "Horizontal: vídeo comum do YouTube ou Vimeo (deitado, 16:9). Vertical: Shorts ou vídeo em pé (9:16).",
+              "options": [
+                {
+                  "label": "Horizontal (vídeo comum, 16:9)",
+                  "value": "horizontal"
+                },
+                {
+                  "label": "Vertical (Shorts, 9:16)",
+                  "value": "vertical"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "secoes",
+          "label": "Construtor: blocos logo depois de \"Sobre o projeto\" (arraste para ordenar)",
+          "label_singular": "Bloco",
+          "widget": "list",
+          "required": false,
+          "typeKey": "tipo",
+          "hint": "Adicione blocos, arraste para mudar a ordem e use a lixeira para remover.",
+          "types": [
+            {
+              "name": "texto",
+              "label": "Texto",
+              "widget": "object",
+              "summary": "Texto: {{titulo.pt}}",
+              "fields": [
+                {
+                  "name": "titulo",
+                  "label": "Título",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ],
+                  "required": false
+                },
+                {
+                  "name": "texto",
+                  "label": "Texto",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "text",
+                      "required": true
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "text",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "text",
+                      "required": false
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "galeria",
+              "label": "Galeria de imagens",
+              "widget": "object",
+              "summary": "Galeria: {{titulo.pt}}",
+              "fields": [
+                {
+                  "name": "titulo",
+                  "label": "Título",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ],
+                  "required": false
+                },
+                {
+                  "name": "formato",
+                  "label": "Formato das imagens",
+                  "widget": "select",
+                  "default": "grade",
+                  "options": [
+                    {
+                      "label": "Grade (duas por linha)",
+                      "value": "grade"
+                    },
+                    {
+                      "label": "Larga (largura toda)",
+                      "value": "larga"
+                    }
+                  ]
+                },
+                {
+                  "name": "imagens",
+                  "label": "Imagens (pode selecionar várias de uma vez)",
+                  "widget": "image",
+                  "multiple": true,
+                  "min": 1,
+                  "max": 24,
+                  "hint": "Arraste para ordenar. Até 24 imagens."
+                }
+              ]
+            },
+            {
+              "name": "grid-criativa",
+              "label": "Grid criativa (mosaico de fotos)",
+              "widget": "object",
+              "summary": "Grid criativa: {{titulo.pt}}",
+              "fields": [
+                {
+                  "name": "titulo",
+                  "label": "Título",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ],
+                  "required": false
+                },
+                {
+                  "name": "imagens",
+                  "label": "Imagens (pode selecionar várias de uma vez)",
+                  "widget": "image",
+                  "multiple": true,
+                  "min": 1,
+                  "max": 24,
+                  "hint": "Envie várias de uma vez e arraste para ordenar (até 24). O desenho se repete a cada 6: uma grande ao lado de duas, depois três em linha. Clicar abre a imagem ampliada."
+                }
+              ]
+            },
+            {
+              "name": "video",
+              "label": "Vídeos",
+              "widget": "object",
+              "summary": "Vídeos: {{titulo.pt}}",
+              "fields": [
+                {
+                  "name": "titulo",
+                  "label": "Título",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ],
+                  "required": false
+                },
+                {
+                  "name": "videos",
+                  "label": "Vídeos",
+                  "widget": "list",
+                  "min": 1,
+                  "summary": "{{link}}",
+                  "fields": [
+                    {
+                      "name": "link",
+                      "label": "Link do vídeo (YouTube ou Vimeo)",
+                      "widget": "string",
+                      "pattern": [
+                        "^https:\\/\\/(?:www\\.)?(?:youtube\\.com\\/(?:watch\\?v=|shorts\\/|embed\\/)[\\w-]{11}(?:[?&][\\w=&%.-]*)?|youtu\\.be\\/[\\w-]{11}(?:\\?[\\w=&%.-]*)?|vimeo\\.com\\/\\d+|player\\.vimeo\\.com\\/video\\/\\d+)$",
+                        "Use um link do YouTube ou do Vimeo"
+                      ]
+                    },
+                    {
+                      "name": "formato",
+                      "label": "Formato do vídeo",
+                      "widget": "select",
+                      "default": "horizontal",
+                      "hint": "Horizontal: vídeo comum do YouTube ou Vimeo (deitado, 16:9). Vertical: Shorts ou vídeo em pé (9:16).",
+                      "options": [
+                        {
+                          "label": "Horizontal (vídeo comum, 16:9)",
+                          "value": "horizontal"
+                        },
+                        {
+                          "label": "Vertical (Shorts, 9:16)",
+                          "value": "vertical"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "imagem-tela-cheia",
+              "label": "Imagem em tela cheia",
+              "widget": "object",
+              "summary": "Imagem: {{imagem}}",
+              "fields": [
+                {
+                  "name": "imagem",
+                  "label": "Imagem",
+                  "widget": "image"
+                }
+              ]
+            },
+            {
+              "name": "carrossel",
+              "label": "Carrossel em leque",
+              "widget": "object",
+              "summary": "Carrossel: {{titulo.pt}}",
+              "fields": [
+                {
+                  "name": "titulo",
+                  "label": "Título",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ],
+                  "required": false
+                },
+                {
+                  "name": "conteudo",
+                  "label": "Conteúdo do carrossel (arraste para ordenar)",
+                  "label_singular": "Conteúdo",
+                  "widget": "list",
+                  "typeKey": "tipo",
+                  "min": 1,
+                  "hint": "Adicione imagens (várias de uma vez, de preferência verticais 9:16) e vídeos, na ordem que quiser. Até 24 imagens.",
+                  "types": [
+                    {
+                      "name": "imagens",
+                      "label": "Imagens",
+                      "widget": "object",
+                      "summary": "Imagens",
+                      "fields": [
+                        {
+                          "name": "imagens",
+                          "label": "Imagens (pode selecionar várias de uma vez)",
+                          "widget": "image",
+                          "multiple": true,
+                          "min": 1,
+                          "max": 24
+                        }
+                      ]
+                    },
+                    {
+                      "name": "video",
+                      "label": "Vídeo",
+                      "widget": "object",
+                      "summary": "Vídeo: {{link}}",
+                      "fields": [
+                        {
+                          "name": "link",
+                          "label": "Link do vídeo (YouTube ou Vimeo)",
+                          "widget": "string",
+                          "pattern": [
+                            "^https:\\/\\/(?:www\\.)?(?:youtube\\.com\\/(?:watch\\?v=|shorts\\/|embed\\/)[\\w-]{11}(?:[?&][\\w=&%.-]*)?|youtu\\.be\\/[\\w-]{11}(?:\\?[\\w=&%.-]*)?|vimeo\\.com\\/\\d+|player\\.vimeo\\.com\\/video\\/\\d+)$",
+                            "Use um link do YouTube ou do Vimeo"
+                          ]
+                        },
+                        {
+                          "name": "formato",
+                          "label": "Formato do vídeo",
+                          "widget": "select",
+                          "default": "horizontal",
+                          "hint": "Horizontal: vídeo comum do YouTube ou Vimeo (deitado, 16:9). Vertical: Shorts ou vídeo em pé (9:16).",
+                          "options": [
+                            {
+                              "label": "Horizontal (vídeo comum, 16:9)",
+                              "value": "horizontal"
+                            },
+                            {
+                              "label": "Vertical (Shorts, 9:16)",
+                              "value": "vertical"
+                            }
+                          ]
+                        },
+                        {
+                          "name": "capa",
+                          "label": "Capa do cartão",
+                          "widget": "image",
+                          "required": false,
+                          "hint": "Opcional. Sem capa, o cartão fica escuro com o play. Ao clicar, o vídeo abre grande."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "destaque",
+                  "label": "Destaque (posição no carrossel)",
+                  "widget": "number",
+                  "value_type": "int",
+                  "required": false,
+                  "min": 1,
+                  "hint": "Ex.: 3 = o terceiro item fica no centro (conta cada imagem e cada vídeo, na ordem). Vazio: o primeiro."
+                }
+              ]
+            },
+            {
+              "name": "antes-depois",
+              "label": "Antes e depois (barra de comparar)",
+              "widget": "object",
+              "summary": "Antes e depois: {{titulo.pt}}",
+              "fields": [
+                {
+                  "name": "titulo",
+                  "label": "Título",
+                  "widget": "object",
+                  "collapsed": false,
+                  "required": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ]
+                },
+                {
+                  "name": "antes",
+                  "label": "Imagem do antes (fica à esquerda da barra)",
+                  "widget": "image"
+                },
+                {
+                  "name": "depois",
+                  "label": "Imagem do depois (fica à direita da barra; com vídeo, vira a capa parada dele)",
+                  "widget": "image",
+                  "hint": "Use as duas imagens com a mesma proporção (mesma largura e altura), senão uma delas é recortada."
+                },
+                {
+                  "name": "depoisVideo",
+                  "label": "Vídeo do depois (MP4, opcional)",
+                  "widget": "file",
+                  "required": false,
+                  "accept": "video/mp4",
+                  "hint": "Com o vídeo, o lado do depois roda em loop, sem som. Use a mesma proporção da imagem do antes. Para voltar à imagem, apague o vídeo."
+                },
+                {
+                  "name": "rotuloAntes",
+                  "label": "Texto do antes (dentro da imagem, embaixo à esquerda)",
+                  "widget": "object",
+                  "collapsed": false,
+                  "required": false,
+                  "hint": "Vazio: \"Antes\" no idioma da página. Ex.: 2018",
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ]
+                },
+                {
+                  "name": "rotuloDepois",
+                  "label": "Texto do depois (dentro da imagem, embaixo à direita)",
+                  "widget": "object",
+                  "collapsed": false,
+                  "required": false,
+                  "hint": "Vazio: \"Depois\" no idioma da página. Ex.: 2026",
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "video-loop",
+              "label": "Vídeo em loop (MP4 do site, sem som)",
+              "widget": "object",
+              "summary": "Vídeo em loop: {{titulo.pt}}",
+              "fields": [
+                {
+                  "name": "titulo",
+                  "label": "Título",
+                  "widget": "object",
+                  "collapsed": false,
+                  "required": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ]
+                },
+                {
+                  "name": "video",
+                  "label": "Vídeo (MP4)",
+                  "widget": "file",
+                  "accept": "video/mp4",
+                  "hint": "MP4 curto e sem som (até 10 MB). Roda sozinho e repete, sem botões."
+                },
+                {
+                  "name": "formato",
+                  "label": "Formato do vídeo",
+                  "widget": "select",
+                  "default": "horizontal",
+                  "options": [
+                    {
+                      "label": "Horizontal (16:9)",
+                      "value": "horizontal"
+                    },
+                    {
+                      "label": "Vertical (9:16)",
+                      "value": "vertical"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "chamada",
+              "label": "Chamada para contato",
+              "widget": "object",
+              "summary": "Chamada: {{titulo.pt}}",
+              "fields": [
+                {
+                  "name": "titulo",
+                  "label": "Título",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": true
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ]
+                },
+                {
+                  "name": "texto",
+                  "label": "Texto",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ],
+                  "required": false
+                },
+                {
+                  "name": "botao",
+                  "label": "Texto do botão",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": true
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ]
+                },
+                {
+                  "name": "link",
+                  "label": "Link do botão",
+                  "widget": "string",
+                  "required": false,
+                  "pattern": [
+                    "^(/(?!/)|https://)",
+                    "Use um endereço do site (/...) ou https://"
+                  ],
+                  "hint": "Vazio: leva ao Contato da Home. Ex.: /#contact, /work ou https://wa.link/..."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "galeria",
+          "label": "Galeria (arraste para ordenar)",
+          "widget": "list",
+          "required": false,
+          "typeKey": "tipo",
+          "max": 12,
+          "hint": "Até 12 itens (imagens e vídeos). Para mais, use um bloco de galeria ou carrossel no construtor (até 24 cada).",
+          "types": [
+            {
+              "name": "imagem",
+              "label": "Imagem",
+              "widget": "object",
+              "summary": "{{imagem}}",
+              "fields": [
+                {
+                  "name": "imagem",
+                  "label": "Imagem",
+                  "widget": "image"
+                },
+                {
+                  "name": "formato",
+                  "label": "Formato",
+                  "widget": "select",
+                  "default": "larga",
+                  "options": [
+                    {
+                      "label": "Larga (largura toda)",
+                      "value": "larga"
+                    },
+                    {
+                      "label": "Grade (duas por linha)",
+                      "value": "grade"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "video",
+              "label": "Vídeo",
+              "widget": "object",
+              "summary": "{{link}}",
+              "fields": [
+                {
+                  "name": "link",
+                  "label": "Link do vídeo (YouTube ou Vimeo)",
+                  "widget": "string",
+                  "pattern": [
+                    "^https:\\/\\/(?:www\\.)?(?:youtube\\.com\\/(?:watch\\?v=|shorts\\/|embed\\/)[\\w-]{11}(?:[?&][\\w=&%.-]*)?|youtu\\.be\\/[\\w-]{11}(?:\\?[\\w=&%.-]*)?|vimeo\\.com\\/\\d+|player\\.vimeo\\.com\\/video\\/\\d+)$",
+                    "Use um link do YouTube ou do Vimeo"
+                  ]
+                },
+                {
+                  "name": "formato",
+                  "label": "Formato do vídeo",
+                  "widget": "select",
+                  "default": "horizontal",
+                  "hint": "Horizontal: vídeo comum do YouTube ou Vimeo (deitado, 16:9). Vertical: Shorts ou vídeo em pé (9:16).",
+                  "options": [
+                    {
+                      "label": "Horizontal (vídeo comum, 16:9)",
+                      "value": "horizontal"
+                    },
+                    {
+                      "label": "Vertical (Shorts, 9:16)",
+                      "value": "vertical"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "filter": {
+        "field": "publicado",
+        "value": true
+      }
+    },
+    {
+      "name": "rascunhos",
+      "label": "Rascunhos",
+      "label_singular": "Rascunho",
+      "icon": "edit_note",
+      "folder": "src/content/projetos",
+      "extension": "json",
+      "format": "json",
+      "create": true,
+      "delete": true,
+      "identifier_field": "url",
+      "slug": "{{url}}",
+      "summary": "{{titulo.pt}}  ·  {{publicado | ternary('Publicado', 'Rascunho')}}  ·  {{categoria.pt}}  ·  {{ano}}",
+      "view_filters": [
+        {
+          "label": "Edição & Motion",
+          "field": "areas",
+          "pattern": "edicao-motion"
+        },
+        {
+          "label": "UI Design",
+          "field": "areas",
+          "pattern": "ui-design"
+        },
+        {
+          "label": "Design",
+          "field": "areas",
+          "pattern": "design"
+        },
+        {
+          "label": "Fotografia com IA",
+          "field": "areas",
+          "pattern": "fotografia-ia"
+        },
+        {
+          "label": "Web & Produto",
+          "field": "areas",
+          "pattern": "web-produto"
+        }
+      ],
+      "view_groups": [
+        {
+          "label": "Situação",
+          "field": "publicado"
+        },
+        {
+          "label": "Ano",
+          "field": "ano"
+        }
+      ],
+      "media_folder": "/public/uploads/projetos/{{slug}}",
+      "public_folder": "/uploads/projetos/{{slug}}",
+      "sortable_fields": {
+        "fields": [
+          "commit_date",
+          "titulo.pt",
+          "ano"
+        ],
+        "default": {
+          "field": "commit_date",
+          "direction": "descending"
+        }
+      },
+      "editor": {
+        "preview": true
+      },
+      "preview_path": "work/{{slug}}",
+      "fields": [
+        {
+          "name": "publicado",
+          "label": "Publicado no site",
+          "widget": "boolean",
+          "default": false,
+          "hint": "Desligado = rascunho: o projeto não aparece no site."
+        },
+        {
+          "name": "url",
+          "label": "Endereço (URL)",
+          "widget": "string",
+          "pattern": [
+            "^[a-z0-9]+(?:[.-][a-z0-9]+)*$",
+            "Só letras minúsculas sem acento, números, hífen e ponto"
+          ],
+          "hint": "Fica em elliotparker.com.br/work/endereço. Não pode repetir nem ser admin, api, work, en, es ou 404."
+        },
+        {
+          "name": "titulo",
+          "label": "Título",
+          "widget": "object",
+          "collapsed": false,
+          "fields": [
+            {
+              "name": "pt",
+              "label": "Português",
+              "widget": "string",
+              "required": true
+            },
+            {
+              "name": "en",
+              "label": "English",
+              "widget": "string",
+              "required": false
+            },
+            {
+              "name": "es",
+              "label": "Español",
+              "widget": "string",
+              "required": false
+            }
+          ]
+        },
+        {
+          "name": "categoria",
+          "label": "Categoria",
+          "widget": "object",
+          "collapsed": false,
+          "fields": [
+            {
+              "name": "pt",
+              "label": "Português",
+              "widget": "string",
+              "required": true
+            },
+            {
+              "name": "en",
+              "label": "English",
+              "widget": "string",
+              "required": false
+            },
+            {
+              "name": "es",
+              "label": "Español",
+              "widget": "string",
+              "required": false
+            }
+          ],
+          "hint": "Ex.: Edição criativa, Poster, UI Design"
+        },
+        {
+          "name": "areas",
+          "label": "Áreas (filtros de Trabalhos)",
+          "widget": "relation",
+          "multiple": true,
+          "collection": "trabalhos",
+          "file": "trabalhos",
+          "value_field": "filtros.areas.*.id",
+          "search_fields": [
+            "filtros.areas.*.rotulo.pt"
+          ],
+          "display_fields": [
+            "filtros.areas.*.rotulo.pt"
+          ],
+          "hint": "Escolha uma ou mais. Áreas novas: Configurações > Página Trabalhos."
+        },
+        {
+          "name": "ano",
+          "label": "Ano",
+          "widget": "number",
+          "value_type": "int",
+          "required": false,
+          "min": 1900,
+          "max": 2100
+        },
+        {
+          "name": "siteAoVivo",
+          "label": "Site ao vivo (botão Live View)",
+          "widget": "string",
+          "required": false,
+          "pattern": [
+            "^https://[^s\"'<>]+$",
+            "Use um link que comece com https://"
+          ],
+          "hint": "Link do site real. Preenchido, aparece o botão \"Live View\" no topo do projeto, abrindo o site em outra aba. Vazio, o botão não aparece."
+        },
+        {
+          "name": "resumoCard",
+          "label": "Texto curto do card",
+          "widget": "object",
+          "collapsed": false,
+          "fields": [
+            {
+              "name": "pt",
+              "label": "Português",
+              "widget": "string",
+              "required": false
+            },
+            {
+              "name": "en",
+              "label": "English",
+              "widget": "string",
+              "required": false
+            },
+            {
+              "name": "es",
+              "label": "Español",
+              "widget": "string",
+              "required": false
+            }
+          ],
+          "hint": "Opcional. Vazio: o card usa o começo do resumo.",
+          "required": false
+        },
+        {
+          "name": "resumo",
+          "label": "Resumo (topo da página)",
+          "widget": "object",
+          "collapsed": false,
+          "fields": [
+            {
+              "name": "pt",
+              "label": "Português",
+              "widget": "text",
+              "required": true
+            },
+            {
+              "name": "en",
+              "label": "English",
+              "widget": "text",
+              "required": false
+            },
+            {
+              "name": "es",
+              "label": "Español",
+              "widget": "text",
+              "required": false
+            }
+          ]
+        },
+        {
+          "name": "sobre",
+          "label": "Sobre o projeto",
+          "widget": "object",
+          "collapsed": false,
+          "fields": [
+            {
+              "name": "pt",
+              "label": "Português",
+              "widget": "text",
+              "required": true
+            },
+            {
+              "name": "en",
+              "label": "English",
+              "widget": "text",
+              "required": false
+            },
+            {
+              "name": "es",
+              "label": "Español",
+              "widget": "text",
+              "required": false
+            }
+          ],
+          "hint": "Parágrafos separados por linha em branco. ***texto*** fica em negrito e itálico."
+        },
+        {
+          "name": "seo",
+          "label": "SEO (opcional)",
+          "widget": "object",
+          "required": false,
+          "collapsed": true,
+          "hint": "Como o projeto aparece no Google e ao compartilhar o link. Vazio: usa o título e o começo do resumo.",
+          "fields": [
+            {
+              "name": "titulo",
+              "label": "Título nos buscadores",
+              "widget": "object",
+              "collapsed": false,
+              "fields": [
+                {
+                  "name": "pt",
+                  "label": "Português",
+                  "widget": "string",
+                  "required": false
+                },
+                {
+                  "name": "en",
+                  "label": "English",
+                  "widget": "string",
+                  "required": false
+                },
+                {
+                  "name": "es",
+                  "label": "Español",
+                  "widget": "string",
+                  "required": false
+                }
+              ],
+              "hint": "Ideal: até 60 letras.",
+              "required": false
+            },
+            {
+              "name": "descricao",
+              "label": "Descrição nos buscadores",
+              "widget": "object",
+              "collapsed": false,
+              "fields": [
+                {
+                  "name": "pt",
+                  "label": "Português",
+                  "widget": "text",
+                  "required": false
+                },
+                {
+                  "name": "en",
+                  "label": "English",
+                  "widget": "text",
+                  "required": false
+                },
+                {
+                  "name": "es",
+                  "label": "Español",
+                  "widget": "text",
+                  "required": false
+                }
+              ],
+              "hint": "Ideal: de 70 a 160 letras.",
+              "required": false
+            }
+          ]
+        },
+        {
+          "name": "capa",
+          "label": "Capa (horizontal)",
+          "widget": "image",
+          "hint": "Até 10 MB. Vira WebP sozinha."
+        },
+        {
+          "name": "capaVertical",
+          "label": "Capa vertical (celular)",
+          "widget": "image",
+          "required": false,
+          "hint": "Opcional, de preferência 3:4. Sem ela, o celular recorta a capa horizontal."
+        },
+        {
+          "name": "topo",
+          "label": "O que aparece no topo",
+          "widget": "select",
+          "default": "video",
+          "options": [
+            {
+              "label": "Vídeo(s) do YouTube ou Vimeo",
+              "value": "video"
+            },
+            {
+              "label": "Capa (imagem)",
+              "value": "capa"
+            },
+            {
+              "label": "Vídeo em loop (MP4 do site, sem som)",
+              "value": "loop"
+            }
+          ],
+          "hint": "Vídeo sem nenhum vídeo cadastrado mostra a capa. Vídeo em loop sem o arquivo MP4 também mostra a capa."
+        },
+        {
+          "name": "capaVideo",
+          "label": "Vídeo em loop do topo (MP4)",
+          "widget": "file",
+          "required": false,
+          "accept": "video/mp4",
+          "hint": "Só para \"Vídeo em loop\". MP4 curto e sem som (até 10 MB), roda sozinho e repete. Para tirar, apague o arquivo aqui e escolha outra opção no topo. A capa continua sendo a imagem dos cards."
+        },
+        {
+          "name": "videos",
+          "label": "Vídeos do topo",
+          "label_singular": "Vídeo",
+          "widget": "list",
+          "required": false,
+          "summary": "{{link}}",
+          "fields": [
+            {
+              "name": "link",
+              "label": "Link do vídeo (YouTube ou Vimeo)",
+              "widget": "string",
+              "pattern": [
+                "^https:\\/\\/(?:www\\.)?(?:youtube\\.com\\/(?:watch\\?v=|shorts\\/|embed\\/)[\\w-]{11}(?:[?&][\\w=&%.-]*)?|youtu\\.be\\/[\\w-]{11}(?:\\?[\\w=&%.-]*)?|vimeo\\.com\\/\\d+|player\\.vimeo\\.com\\/video\\/\\d+)$",
+                "Use um link do YouTube ou do Vimeo"
+              ]
+            },
+            {
+              "name": "formato",
+              "label": "Formato do vídeo",
+              "widget": "select",
+              "default": "horizontal",
+              "hint": "Horizontal: vídeo comum do YouTube ou Vimeo (deitado, 16:9). Vertical: Shorts ou vídeo em pé (9:16).",
+              "options": [
+                {
+                  "label": "Horizontal (vídeo comum, 16:9)",
+                  "value": "horizontal"
+                },
+                {
+                  "label": "Vertical (Shorts, 9:16)",
+                  "value": "vertical"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "secoes",
+          "label": "Construtor: blocos logo depois de \"Sobre o projeto\" (arraste para ordenar)",
+          "label_singular": "Bloco",
+          "widget": "list",
+          "required": false,
+          "typeKey": "tipo",
+          "hint": "Adicione blocos, arraste para mudar a ordem e use a lixeira para remover.",
+          "types": [
+            {
+              "name": "texto",
+              "label": "Texto",
+              "widget": "object",
+              "summary": "Texto: {{titulo.pt}}",
+              "fields": [
+                {
+                  "name": "titulo",
+                  "label": "Título",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ],
+                  "required": false
+                },
+                {
+                  "name": "texto",
+                  "label": "Texto",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "text",
+                      "required": true
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "text",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "text",
+                      "required": false
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "galeria",
+              "label": "Galeria de imagens",
+              "widget": "object",
+              "summary": "Galeria: {{titulo.pt}}",
+              "fields": [
+                {
+                  "name": "titulo",
+                  "label": "Título",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ],
+                  "required": false
+                },
+                {
+                  "name": "formato",
+                  "label": "Formato das imagens",
+                  "widget": "select",
+                  "default": "grade",
+                  "options": [
+                    {
+                      "label": "Grade (duas por linha)",
+                      "value": "grade"
+                    },
+                    {
+                      "label": "Larga (largura toda)",
+                      "value": "larga"
+                    }
+                  ]
+                },
+                {
+                  "name": "imagens",
+                  "label": "Imagens (pode selecionar várias de uma vez)",
+                  "widget": "image",
+                  "multiple": true,
+                  "min": 1,
+                  "max": 24,
+                  "hint": "Arraste para ordenar. Até 24 imagens."
+                }
+              ]
+            },
+            {
+              "name": "grid-criativa",
+              "label": "Grid criativa (mosaico de fotos)",
+              "widget": "object",
+              "summary": "Grid criativa: {{titulo.pt}}",
+              "fields": [
+                {
+                  "name": "titulo",
+                  "label": "Título",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ],
+                  "required": false
+                },
+                {
+                  "name": "imagens",
+                  "label": "Imagens (pode selecionar várias de uma vez)",
+                  "widget": "image",
+                  "multiple": true,
+                  "min": 1,
+                  "max": 24,
+                  "hint": "Envie várias de uma vez e arraste para ordenar (até 24). O desenho se repete a cada 6: uma grande ao lado de duas, depois três em linha. Clicar abre a imagem ampliada."
+                }
+              ]
+            },
+            {
+              "name": "video",
+              "label": "Vídeos",
+              "widget": "object",
+              "summary": "Vídeos: {{titulo.pt}}",
+              "fields": [
+                {
+                  "name": "titulo",
+                  "label": "Título",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ],
+                  "required": false
+                },
+                {
+                  "name": "videos",
+                  "label": "Vídeos",
+                  "widget": "list",
+                  "min": 1,
+                  "summary": "{{link}}",
+                  "fields": [
+                    {
+                      "name": "link",
+                      "label": "Link do vídeo (YouTube ou Vimeo)",
+                      "widget": "string",
+                      "pattern": [
+                        "^https:\\/\\/(?:www\\.)?(?:youtube\\.com\\/(?:watch\\?v=|shorts\\/|embed\\/)[\\w-]{11}(?:[?&][\\w=&%.-]*)?|youtu\\.be\\/[\\w-]{11}(?:\\?[\\w=&%.-]*)?|vimeo\\.com\\/\\d+|player\\.vimeo\\.com\\/video\\/\\d+)$",
+                        "Use um link do YouTube ou do Vimeo"
+                      ]
+                    },
+                    {
+                      "name": "formato",
+                      "label": "Formato do vídeo",
+                      "widget": "select",
+                      "default": "horizontal",
+                      "hint": "Horizontal: vídeo comum do YouTube ou Vimeo (deitado, 16:9). Vertical: Shorts ou vídeo em pé (9:16).",
+                      "options": [
+                        {
+                          "label": "Horizontal (vídeo comum, 16:9)",
+                          "value": "horizontal"
+                        },
+                        {
+                          "label": "Vertical (Shorts, 9:16)",
+                          "value": "vertical"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "imagem-tela-cheia",
+              "label": "Imagem em tela cheia",
+              "widget": "object",
+              "summary": "Imagem: {{imagem}}",
+              "fields": [
+                {
+                  "name": "imagem",
+                  "label": "Imagem",
+                  "widget": "image"
+                }
+              ]
+            },
+            {
+              "name": "carrossel",
+              "label": "Carrossel em leque",
+              "widget": "object",
+              "summary": "Carrossel: {{titulo.pt}}",
+              "fields": [
+                {
+                  "name": "titulo",
+                  "label": "Título",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ],
+                  "required": false
+                },
+                {
+                  "name": "conteudo",
+                  "label": "Conteúdo do carrossel (arraste para ordenar)",
+                  "label_singular": "Conteúdo",
+                  "widget": "list",
+                  "typeKey": "tipo",
+                  "min": 1,
+                  "hint": "Adicione imagens (várias de uma vez, de preferência verticais 9:16) e vídeos, na ordem que quiser. Até 24 imagens.",
+                  "types": [
+                    {
+                      "name": "imagens",
+                      "label": "Imagens",
+                      "widget": "object",
+                      "summary": "Imagens",
+                      "fields": [
+                        {
+                          "name": "imagens",
+                          "label": "Imagens (pode selecionar várias de uma vez)",
+                          "widget": "image",
+                          "multiple": true,
+                          "min": 1,
+                          "max": 24
+                        }
+                      ]
+                    },
+                    {
+                      "name": "video",
+                      "label": "Vídeo",
+                      "widget": "object",
+                      "summary": "Vídeo: {{link}}",
+                      "fields": [
+                        {
+                          "name": "link",
+                          "label": "Link do vídeo (YouTube ou Vimeo)",
+                          "widget": "string",
+                          "pattern": [
+                            "^https:\\/\\/(?:www\\.)?(?:youtube\\.com\\/(?:watch\\?v=|shorts\\/|embed\\/)[\\w-]{11}(?:[?&][\\w=&%.-]*)?|youtu\\.be\\/[\\w-]{11}(?:\\?[\\w=&%.-]*)?|vimeo\\.com\\/\\d+|player\\.vimeo\\.com\\/video\\/\\d+)$",
+                            "Use um link do YouTube ou do Vimeo"
+                          ]
+                        },
+                        {
+                          "name": "formato",
+                          "label": "Formato do vídeo",
+                          "widget": "select",
+                          "default": "horizontal",
+                          "hint": "Horizontal: vídeo comum do YouTube ou Vimeo (deitado, 16:9). Vertical: Shorts ou vídeo em pé (9:16).",
+                          "options": [
+                            {
+                              "label": "Horizontal (vídeo comum, 16:9)",
+                              "value": "horizontal"
+                            },
+                            {
+                              "label": "Vertical (Shorts, 9:16)",
+                              "value": "vertical"
+                            }
+                          ]
+                        },
+                        {
+                          "name": "capa",
+                          "label": "Capa do cartão",
+                          "widget": "image",
+                          "required": false,
+                          "hint": "Opcional. Sem capa, o cartão fica escuro com o play. Ao clicar, o vídeo abre grande."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "destaque",
+                  "label": "Destaque (posição no carrossel)",
+                  "widget": "number",
+                  "value_type": "int",
+                  "required": false,
+                  "min": 1,
+                  "hint": "Ex.: 3 = o terceiro item fica no centro (conta cada imagem e cada vídeo, na ordem). Vazio: o primeiro."
+                }
+              ]
+            },
+            {
+              "name": "antes-depois",
+              "label": "Antes e depois (barra de comparar)",
+              "widget": "object",
+              "summary": "Antes e depois: {{titulo.pt}}",
+              "fields": [
+                {
+                  "name": "titulo",
+                  "label": "Título",
+                  "widget": "object",
+                  "collapsed": false,
+                  "required": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ]
+                },
+                {
+                  "name": "antes",
+                  "label": "Imagem do antes (fica à esquerda da barra)",
+                  "widget": "image"
+                },
+                {
+                  "name": "depois",
+                  "label": "Imagem do depois (fica à direita da barra; com vídeo, vira a capa parada dele)",
+                  "widget": "image",
+                  "hint": "Use as duas imagens com a mesma proporção (mesma largura e altura), senão uma delas é recortada."
+                },
+                {
+                  "name": "depoisVideo",
+                  "label": "Vídeo do depois (MP4, opcional)",
+                  "widget": "file",
+                  "required": false,
+                  "accept": "video/mp4",
+                  "hint": "Com o vídeo, o lado do depois roda em loop, sem som. Use a mesma proporção da imagem do antes. Para voltar à imagem, apague o vídeo."
+                },
+                {
+                  "name": "rotuloAntes",
+                  "label": "Texto do antes (dentro da imagem, embaixo à esquerda)",
+                  "widget": "object",
+                  "collapsed": false,
+                  "required": false,
+                  "hint": "Vazio: \"Antes\" no idioma da página. Ex.: 2018",
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ]
+                },
+                {
+                  "name": "rotuloDepois",
+                  "label": "Texto do depois (dentro da imagem, embaixo à direita)",
+                  "widget": "object",
+                  "collapsed": false,
+                  "required": false,
+                  "hint": "Vazio: \"Depois\" no idioma da página. Ex.: 2026",
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "video-loop",
+              "label": "Vídeo em loop (MP4 do site, sem som)",
+              "widget": "object",
+              "summary": "Vídeo em loop: {{titulo.pt}}",
+              "fields": [
+                {
+                  "name": "titulo",
+                  "label": "Título",
+                  "widget": "object",
+                  "collapsed": false,
+                  "required": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ]
+                },
+                {
+                  "name": "video",
+                  "label": "Vídeo (MP4)",
+                  "widget": "file",
+                  "accept": "video/mp4",
+                  "hint": "MP4 curto e sem som (até 10 MB). Roda sozinho e repete, sem botões."
+                },
+                {
+                  "name": "formato",
+                  "label": "Formato do vídeo",
+                  "widget": "select",
+                  "default": "horizontal",
+                  "options": [
+                    {
+                      "label": "Horizontal (16:9)",
+                      "value": "horizontal"
+                    },
+                    {
+                      "label": "Vertical (9:16)",
+                      "value": "vertical"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "chamada",
+              "label": "Chamada para contato",
+              "widget": "object",
+              "summary": "Chamada: {{titulo.pt}}",
+              "fields": [
+                {
+                  "name": "titulo",
+                  "label": "Título",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": true
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ]
+                },
+                {
+                  "name": "texto",
+                  "label": "Texto",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ],
+                  "required": false
+                },
+                {
+                  "name": "botao",
+                  "label": "Texto do botão",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": true
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ]
+                },
+                {
+                  "name": "link",
+                  "label": "Link do botão",
+                  "widget": "string",
+                  "required": false,
+                  "pattern": [
+                    "^(/(?!/)|https://)",
+                    "Use um endereço do site (/...) ou https://"
+                  ],
+                  "hint": "Vazio: leva ao Contato da Home. Ex.: /#contact, /work ou https://wa.link/..."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "galeria",
+          "label": "Galeria (arraste para ordenar)",
+          "widget": "list",
+          "required": false,
+          "typeKey": "tipo",
+          "max": 12,
+          "hint": "Até 12 itens (imagens e vídeos). Para mais, use um bloco de galeria ou carrossel no construtor (até 24 cada).",
+          "types": [
+            {
+              "name": "imagem",
+              "label": "Imagem",
+              "widget": "object",
+              "summary": "{{imagem}}",
+              "fields": [
+                {
+                  "name": "imagem",
+                  "label": "Imagem",
+                  "widget": "image"
+                },
+                {
+                  "name": "formato",
+                  "label": "Formato",
+                  "widget": "select",
+                  "default": "larga",
+                  "options": [
+                    {
+                      "label": "Larga (largura toda)",
+                      "value": "larga"
+                    },
+                    {
+                      "label": "Grade (duas por linha)",
+                      "value": "grade"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "video",
+              "label": "Vídeo",
+              "widget": "object",
+              "summary": "{{link}}",
+              "fields": [
+                {
+                  "name": "link",
+                  "label": "Link do vídeo (YouTube ou Vimeo)",
+                  "widget": "string",
+                  "pattern": [
+                    "^https:\\/\\/(?:www\\.)?(?:youtube\\.com\\/(?:watch\\?v=|shorts\\/|embed\\/)[\\w-]{11}(?:[?&][\\w=&%.-]*)?|youtu\\.be\\/[\\w-]{11}(?:\\?[\\w=&%.-]*)?|vimeo\\.com\\/\\d+|player\\.vimeo\\.com\\/video\\/\\d+)$",
+                    "Use um link do YouTube ou do Vimeo"
+                  ]
+                },
+                {
+                  "name": "formato",
+                  "label": "Formato do vídeo",
+                  "widget": "select",
+                  "default": "horizontal",
+                  "hint": "Horizontal: vídeo comum do YouTube ou Vimeo (deitado, 16:9). Vertical: Shorts ou vídeo em pé (9:16).",
+                  "options": [
+                    {
+                      "label": "Horizontal (vídeo comum, 16:9)",
+                      "value": "horizontal"
+                    },
+                    {
+                      "label": "Vertical (Shorts, 9:16)",
+                      "value": "vertical"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "filter": {
+        "field": "publicado",
+        "value": false
+      }
+    },
+    {
+      "name": "ordem",
+      "label": "Ordem dos projetos",
+      "icon": "swap_vert",
+      "editor": {
+        "preview": false
+      },
+      "files": [
+        {
+          "name": "ordem",
+          "label": "Ordem dos projetos",
+          "file": "src/content/config/ordem.json",
+          "fields": [
+            {
+              "name": "projetos",
+              "label": "Projetos (arraste para ordenar)",
+              "widget": "list",
+              "hint": "Ordem em Trabalhos, no carrossel e em \"Mais projetos\". Projeto novo precisa ser incluído aqui.",
+              "field": {
+                "name": "projeto",
+                "label": "Projeto",
+                "widget": "relation",
+                "collection": "projetos",
+                "value_field": "url",
+                "search_fields": [
+                  "titulo.pt",
+                  "url"
+                ],
+                "display_fields": [
+                  "titulo.pt"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "divider": true
+    },
+    {
+      "name": "home",
+      "label": "Home do site",
+      "icon": "home",
+      "editor": {
+        "preview": true
+      },
+      "files": [
+        {
+          "name": "home",
+          "label": "Home",
+          "file": "src/content/config/home.json",
+          "media_folder": "/public/uploads/home",
+          "public_folder": "/uploads/home",
+          "fields": [
+            {
+              "name": "secoes",
+              "label": "Seções da Home (ligar e desligar)",
+              "widget": "object",
+              "collapsed": false,
+              "hint": "A ordem é fixa. Seção desligada some do site nos 3 idiomas.",
+              "fields": [
+                {
+                  "name": "faixa",
+                  "label": "Faixa de serviços",
+                  "widget": "boolean",
+                  "default": true
+                },
+                {
+                  "name": "trabalhos",
+                  "label": "Trabalhos selecionados",
+                  "widget": "boolean",
+                  "default": true
+                },
+                {
+                  "name": "bastidores",
+                  "label": "Bastidores (carrossel)",
+                  "widget": "boolean",
+                  "default": true
+                },
+                {
+                  "name": "sobre",
+                  "label": "Sobre mim",
+                  "widget": "boolean",
+                  "default": true
+                },
+                {
+                  "name": "contato",
+                  "label": "Contato",
+                  "widget": "boolean",
+                  "default": true
+                }
+              ]
+            },
+            {
+              "name": "projetos",
+              "label": "Trabalhos selecionados",
+              "widget": "object",
+              "fields": [
+                {
+                  "name": "destaques",
+                  "label": "Projetos em destaque (arraste para ordenar)",
+                  "widget": "list",
+                  "min": 2,
+                  "max": 8,
+                  "hint": "De 2 a 8 projetos publicados.",
+                  "field": {
+                    "name": "projeto",
+                    "label": "Projeto",
+                    "widget": "relation",
+                    "collection": "projetos",
+                    "value_field": "url",
+                    "search_fields": [
+                      "titulo.pt",
+                      "url"
+                    ],
+                    "display_fields": [
+                      "titulo.pt"
+                    ]
+                  }
+                },
+                {
+                  "name": "titulo",
+                  "label": "Título (Home antiga)",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": true
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ]
+                },
+                {
+                  "name": "botao",
+                  "label": "Botão (Home antiga)",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": true
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "carrossel",
+              "label": "Bastidores: imagens e vídeos do carrossel",
+              "widget": "object",
+              "required": false,
+              "fields": [
+                {
+                  "name": "conteudo",
+                  "label": "Conteúdo do carrossel (arraste para ordenar)",
+                  "label_singular": "Conteúdo",
+                  "widget": "list",
+                  "typeKey": "tipo",
+                  "hint": "Adicione imagens (várias de uma vez, de preferência verticais 9:16) e vídeos, na ordem que quiser. Até 24 imagens. Lista vazia: o carrossel usa as capas dos projetos.",
+                  "types": [
+                    {
+                      "name": "imagens",
+                      "label": "Imagens",
+                      "widget": "object",
+                      "summary": "Imagens",
+                      "fields": [
+                        {
+                          "name": "imagens",
+                          "label": "Imagens (pode selecionar várias de uma vez)",
+                          "widget": "image",
+                          "multiple": true,
+                          "min": 1,
+                          "max": 24
+                        }
+                      ]
+                    },
+                    {
+                      "name": "video",
+                      "label": "Vídeo",
+                      "widget": "object",
+                      "summary": "Vídeo: {{link}}",
+                      "fields": [
+                        {
+                          "name": "link",
+                          "label": "Link do vídeo (YouTube ou Vimeo)",
+                          "widget": "string",
+                          "pattern": [
+                            "^https:\\/\\/(?:www\\.)?(?:youtube\\.com\\/(?:watch\\?v=|shorts\\/|embed\\/)[\\w-]{11}(?:[?&][\\w=&%.-]*)?|youtu\\.be\\/[\\w-]{11}(?:\\?[\\w=&%.-]*)?|vimeo\\.com\\/\\d+|player\\.vimeo\\.com\\/video\\/\\d+)$",
+                            "Use um link do YouTube ou do Vimeo"
+                          ]
+                        },
+                        {
+                          "name": "formato",
+                          "label": "Formato do vídeo",
+                          "widget": "select",
+                          "default": "horizontal",
+                          "hint": "Horizontal: vídeo comum do YouTube ou Vimeo (deitado, 16:9). Vertical: Shorts ou vídeo em pé (9:16).",
+                          "options": [
+                            {
+                              "label": "Horizontal (vídeo comum, 16:9)",
+                              "value": "horizontal"
+                            },
+                            {
+                              "label": "Vertical (Shorts, 9:16)",
+                              "value": "vertical"
+                            }
+                          ]
+                        },
+                        {
+                          "name": "capa",
+                          "label": "Capa do cartão",
+                          "widget": "image",
+                          "required": false,
+                          "hint": "Opcional. Sem capa, o cartão fica escuro com o play. Ao clicar, o vídeo abre grande."
+                        }
+                      ]
+                    }
+                  ],
+                  "required": false
+                },
+                {
+                  "name": "destaque",
+                  "label": "Destaque (posição no carrossel)",
+                  "widget": "number",
+                  "value_type": "int",
+                  "required": false,
+                  "min": 1,
+                  "hint": "Ex.: 3 = o terceiro item fica no centro (conta cada imagem e cada vídeo, na ordem). Vazio: o primeiro."
+                }
+              ]
+            },
+            {
+              "name": "hero",
+              "label": "Hero",
+              "widget": "object",
+              "fields": [
+                {
+                  "name": "ano",
+                  "label": "Ano (canto esquerdo)",
+                  "widget": "string"
+                },
+                {
+                  "name": "desde",
+                  "label": "\"Criando desde\" (canto direito)",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": true
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ]
+                },
+                {
+                  "name": "avatar",
+                  "label": "Foto (Home antiga)",
+                  "widget": "image"
+                },
+                {
+                  "name": "avatarAlt",
+                  "label": "Descrição da foto",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": true
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ]
+                },
+                {
+                  "name": "titulo",
+                  "label": "Título (Home antiga)",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": true
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "bio",
+              "label": "Bio",
+              "widget": "object",
+              "fields": [
+                {
+                  "name": "local",
+                  "label": "Local (selo da foto do Sobre)",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": true
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ]
+                },
+                {
+                  "name": "texto",
+                  "label": "Texto (Home antiga)",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "text",
+                      "required": true
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "text",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "text",
+                      "required": false
+                    }
+                  ]
+                },
+                {
+                  "name": "titulo",
+                  "label": "Título (Home antiga)",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": true
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ]
+                },
+                {
+                  "name": "apresentacao",
+                  "label": "Apresentação (Home antiga)",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "text",
+                      "required": true
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "text",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "text",
+                      "required": false
+                    }
+                  ]
+                },
+                {
+                  "name": "botao",
+                  "label": "Botão (Home antiga)",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": true
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "habilidades",
+              "label": "Habilidades e idiomas",
+              "widget": "object",
+              "fields": [
+                {
+                  "name": "titulo",
+                  "label": "Título (Home antiga)",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": true
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ]
+                },
+                {
+                  "name": "itens",
+                  "label": "Itens",
+                  "widget": "list",
+                  "summary": "{{nome.pt}}",
+                  "hint": "O item \"Idiomas\" alimenta o cartão de idiomas do Sobre. Escreva \"Idioma - Nível\", ex.: \"Inglês - Intermediário B1\".",
+                  "fields": [
+                    {
+                      "name": "nome",
+                      "label": "Nome",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    },
+                    {
+                      "name": "tags",
+                      "label": "Itens",
+                      "widget": "list",
+                      "summary": "{{pt}}",
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string"
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "contato",
+              "label": "Contato (Home antiga)",
+              "widget": "object",
+              "collapsed": true,
+              "fields": [
+                {
+                  "name": "titulo",
+                  "label": "Título",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": true
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ]
+                },
+                {
+                  "name": "texto",
+                  "label": "Texto",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "text",
+                      "required": true
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "text",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "text",
+                      "required": false
+                    }
+                  ]
+                },
+                {
+                  "name": "campos",
+                  "label": "Campos",
+                  "widget": "object",
+                  "collapsed": true,
+                  "fields": [
+                    {
+                      "name": "nome",
+                      "label": "Nome",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    },
+                    {
+                      "name": "nomeDica",
+                      "label": "Dica do nome",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    },
+                    {
+                      "name": "email",
+                      "label": "Email",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    },
+                    {
+                      "name": "emailDica",
+                      "label": "Dica do email",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    },
+                    {
+                      "name": "projeto",
+                      "label": "Projeto",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    },
+                    {
+                      "name": "projetoDica",
+                      "label": "Dica do projeto",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    },
+                    {
+                      "name": "enviar",
+                      "label": "Botão enviar",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "textos",
+              "label": "Textos da Home",
+              "widget": "object",
+              "fields": [
+                {
+                  "name": "hero",
+                  "label": "Hero",
+                  "widget": "object",
+                  "fields": [
+                    {
+                      "name": "alt",
+                      "label": "Descrição do retrato (acessibilidade)",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "faixa",
+                  "label": "Faixa de serviços",
+                  "widget": "object",
+                  "fields": [
+                    {
+                      "name": "rotulo",
+                      "label": "Rótulo (acessibilidade)",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    },
+                    {
+                      "name": "servicos",
+                      "label": "Serviços na faixa",
+                      "widget": "list",
+                      "summary": "{{pt}}",
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string"
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "trabalhos",
+                  "label": "Trabalhos selecionados",
+                  "widget": "object",
+                  "fields": [
+                    {
+                      "name": "sans",
+                      "label": "Título (linha grande)",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    },
+                    {
+                      "name": "serifa",
+                      "label": "Título (linha em serifa)",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    },
+                    {
+                      "name": "frase1",
+                      "label": "Frase 1",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    },
+                    {
+                      "name": "frase2",
+                      "label": "Frase 2",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    },
+                    {
+                      "name": "dica",
+                      "label": "Dica \"role para ver\" (computador)",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    },
+                    {
+                      "name": "dicaToque",
+                      "label": "Dica \"deslize para ver\" (celular e tablet)",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    },
+                    {
+                      "name": "verTodos",
+                      "label": "Botão \"ver todos\"",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    },
+                    {
+                      "name": "fimSans",
+                      "label": "Círculo final (linha grande)",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    },
+                    {
+                      "name": "fimSerifa",
+                      "label": "Círculo final (serifa)",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "bastidores",
+                  "label": "Bastidores (carrossel)",
+                  "widget": "object",
+                  "fields": [
+                    {
+                      "name": "sans",
+                      "label": "Título (linha grande)",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    },
+                    {
+                      "name": "serifa",
+                      "label": "Título (linha em serifa)",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    },
+                    {
+                      "name": "subtitulo",
+                      "label": "Subtítulo",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    },
+                    {
+                      "name": "galeria",
+                      "label": "Nome da galeria (acessibilidade)",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    },
+                    {
+                      "name": "imagem",
+                      "label": "\"Imagem\" (acessibilidade)",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    },
+                    {
+                      "name": "de",
+                      "label": "\"de\" (acessibilidade)",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    },
+                    {
+                      "name": "anterior",
+                      "label": "Seta anterior (acessibilidade)",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    },
+                    {
+                      "name": "proxima",
+                      "label": "Seta próxima (acessibilidade)",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "sobre",
+                  "label": "Sobre mim",
+                  "widget": "object",
+                  "fields": [
+                    {
+                      "name": "rotulo",
+                      "label": "Rótulo",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    },
+                    {
+                      "name": "m1",
+                      "label": "Manifesto, linha 1",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    },
+                    {
+                      "name": "m2",
+                      "label": "Manifesto, linha 2 (antes de ELLIOT PARKER)",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    },
+                    {
+                      "name": "m3",
+                      "label": "Manifesto, linha 3",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    },
+                    {
+                      "name": "m4a",
+                      "label": "Manifesto, linha 4",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    },
+                    {
+                      "name": "m4b",
+                      "label": "Manifesto, palavra final em destaque",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    },
+                    {
+                      "name": "quemSou",
+                      "label": "Título \"Quem sou\"",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    },
+                    {
+                      "name": "destaque",
+                      "label": "Frase de destaque",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    },
+                    {
+                      "name": "texto1",
+                      "label": "Texto 1",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "text",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "text",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "text",
+                          "required": false
+                        }
+                      ]
+                    },
+                    {
+                      "name": "texto2",
+                      "label": "Texto 2",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "text",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "text",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "text",
+                          "required": false
+                        }
+                      ]
+                    },
+                    {
+                      "name": "ondeAtuei",
+                      "label": "Título \"Onde já atuei\"",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    },
+                    {
+                      "name": "experiencias",
+                      "label": "Onde já atuei",
+                      "widget": "list",
+                      "summary": "{{nome.pt}}",
+                      "fields": [
+                        {
+                          "name": "nome",
+                          "label": "Nome",
+                          "widget": "object",
+                          "collapsed": false,
+                          "fields": [
+                            {
+                              "name": "pt",
+                              "label": "Português",
+                              "widget": "string",
+                              "required": true
+                            },
+                            {
+                              "name": "en",
+                              "label": "English",
+                              "widget": "string",
+                              "required": false
+                            },
+                            {
+                              "name": "es",
+                              "label": "Español",
+                              "widget": "string",
+                              "required": false
+                            }
+                          ]
+                        },
+                        {
+                          "name": "texto",
+                          "label": "Texto",
+                          "widget": "object",
+                          "collapsed": false,
+                          "fields": [
+                            {
+                              "name": "pt",
+                              "label": "Português",
+                              "widget": "text",
+                              "required": true
+                            },
+                            {
+                              "name": "en",
+                              "label": "English",
+                              "widget": "text",
+                              "required": false
+                            },
+                            {
+                              "name": "es",
+                              "label": "Español",
+                              "widget": "text",
+                              "required": false
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "name": "oQueFaco",
+                      "label": "Título \"O que eu faço\"",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    },
+                    {
+                      "name": "areas",
+                      "label": "O que eu faço",
+                      "widget": "list",
+                      "summary": "{{nome.pt}}",
+                      "fields": [
+                        {
+                          "name": "nome",
+                          "label": "Nome",
+                          "widget": "object",
+                          "collapsed": false,
+                          "fields": [
+                            {
+                              "name": "pt",
+                              "label": "Português",
+                              "widget": "string",
+                              "required": true
+                            },
+                            {
+                              "name": "en",
+                              "label": "English",
+                              "widget": "string",
+                              "required": false
+                            },
+                            {
+                              "name": "es",
+                              "label": "Español",
+                              "widget": "string",
+                              "required": false
+                            }
+                          ]
+                        },
+                        {
+                          "name": "texto",
+                          "label": "Linha curta",
+                          "widget": "object",
+                          "collapsed": false,
+                          "fields": [
+                            {
+                              "name": "pt",
+                              "label": "Português",
+                              "widget": "string",
+                              "required": true
+                            },
+                            {
+                              "name": "en",
+                              "label": "English",
+                              "widget": "string",
+                              "required": false
+                            },
+                            {
+                              "name": "es",
+                              "label": "Español",
+                              "widget": "string",
+                              "required": false
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "name": "idiomas",
+                      "label": "Título \"Idiomas\"",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    },
+                    {
+                      "name": "nativo",
+                      "label": "Palavra \"Nativo\"",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    },
+                    {
+                      "name": "comoTrabalho",
+                      "label": "Título \"Como eu trabalho\"",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    },
+                    {
+                      "name": "processo",
+                      "label": "Como eu trabalho (passos)",
+                      "widget": "list",
+                      "summary": "{{nome.pt}}",
+                      "fields": [
+                        {
+                          "name": "nome",
+                          "label": "Nome",
+                          "widget": "object",
+                          "collapsed": false,
+                          "fields": [
+                            {
+                              "name": "pt",
+                              "label": "Português",
+                              "widget": "string",
+                              "required": true
+                            },
+                            {
+                              "name": "en",
+                              "label": "English",
+                              "widget": "string",
+                              "required": false
+                            },
+                            {
+                              "name": "es",
+                              "label": "Español",
+                              "widget": "string",
+                              "required": false
+                            }
+                          ]
+                        },
+                        {
+                          "name": "texto",
+                          "label": "Texto",
+                          "widget": "object",
+                          "collapsed": false,
+                          "fields": [
+                            {
+                              "name": "pt",
+                              "label": "Português",
+                              "widget": "text",
+                              "required": true
+                            },
+                            {
+                              "name": "en",
+                              "label": "English",
+                              "widget": "text",
+                              "required": false
+                            },
+                            {
+                              "name": "es",
+                              "label": "Español",
+                              "widget": "text",
+                              "required": false
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "name": "conversar",
+                      "label": "Botão \"Vamos conversar\"",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "contato",
+                  "label": "Contato",
+                  "widget": "object",
+                  "fields": [
+                    {
+                      "name": "rotulo",
+                      "label": "Rótulo",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    },
+                    {
+                      "name": "titulo",
+                      "label": "Título gigante",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    },
+                    {
+                      "name": "chamada1",
+                      "label": "Chamada, linha 1",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    },
+                    {
+                      "name": "chamada2",
+                      "label": "Chamada, linha 2",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    },
+                    {
+                      "name": "email",
+                      "label": "Rótulo \"Email\"",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    },
+                    {
+                      "name": "whatsapp",
+                      "label": "Texto do WhatsApp",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "formulario",
+      "label": "Formulário de contato",
+      "icon": "contact_mail",
+      "editor": {
+        "preview": false
+      },
+      "files": [
+        {
+          "name": "formulario",
+          "label": "Formulário de contato",
+          "file": "src/content/config/formulario.json",
+          "fields": [
+            {
+              "name": "turnstileChave",
+              "label": "Chave pública do anti-robô (Turnstile)",
+              "widget": "string",
+              "required": false,
+              "hint": "Site Key do Turnstile, da Cloudflare. Não é segredo. Vazia: o formulário não aparece na Home."
+            },
+            {
+              "name": "tipoServico",
+              "label": "Tipo de serviço",
+              "widget": "object",
+              "collapsed": true,
+              "hint": "Opcional para o visitante.",
+              "fields": [
+                {
+                  "name": "ativo",
+                  "label": "Mostrar no formulário",
+                  "widget": "boolean",
+                  "default": true,
+                  "hint": "Desligado ou sem opções: o campo não aparece no site."
+                },
+                {
+                  "name": "opcoes",
+                  "label": "Opções (arraste para ordenar)",
+                  "label_singular": "Opção",
+                  "widget": "list",
+                  "required": false,
+                  "summary": "{{rotulo.pt}}",
+                  "fields": [
+                    {
+                      "name": "id",
+                      "label": "Identificador",
+                      "widget": "string",
+                      "pattern": [
+                        "^[a-z0-9-]+$",
+                        "Só minúsculas, números e hífen"
+                      ],
+                      "hint": "Ex.: 150-400. Só letras minúsculas, números e hífen; não aparece no site. As mensagens guardam o texto da opção no idioma do visitante."
+                    },
+                    {
+                      "name": "rotulo",
+                      "label": "Texto da opção",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "faixaOrcamento",
+              "label": "Faixa de orçamento",
+              "widget": "object",
+              "collapsed": true,
+              "hint": "Opcional para o visitante. Ex.: R$ 150 a R$ 400 no português, US$ no inglês e espanhol.",
+              "fields": [
+                {
+                  "name": "ativo",
+                  "label": "Mostrar no formulário",
+                  "widget": "boolean",
+                  "default": true,
+                  "hint": "Desligado ou sem opções: o campo não aparece no site."
+                },
+                {
+                  "name": "opcoes",
+                  "label": "Opções (arraste para ordenar)",
+                  "label_singular": "Opção",
+                  "widget": "list",
+                  "required": false,
+                  "summary": "{{rotulo.pt}}",
+                  "fields": [
+                    {
+                      "name": "id",
+                      "label": "Identificador",
+                      "widget": "string",
+                      "pattern": [
+                        "^[a-z0-9-]+$",
+                        "Só minúsculas, números e hífen"
+                      ],
+                      "hint": "Ex.: 150-400. Só letras minúsculas, números e hífen; não aparece no site. As mensagens guardam o texto da opção no idioma do visitante."
+                    },
+                    {
+                      "name": "rotulo",
+                      "label": "Texto da opção",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "prazo",
+              "label": "Prazo desejado",
+              "widget": "object",
+              "collapsed": true,
+              "hint": "Opcional para o visitante. Sem opções, o campo fica escondido.",
+              "fields": [
+                {
+                  "name": "ativo",
+                  "label": "Mostrar no formulário",
+                  "widget": "boolean",
+                  "default": true,
+                  "hint": "Desligado ou sem opções: o campo não aparece no site."
+                },
+                {
+                  "name": "opcoes",
+                  "label": "Opções (arraste para ordenar)",
+                  "label_singular": "Opção",
+                  "widget": "list",
+                  "required": false,
+                  "summary": "{{rotulo.pt}}",
+                  "fields": [
+                    {
+                      "name": "id",
+                      "label": "Identificador",
+                      "widget": "string",
+                      "pattern": [
+                        "^[a-z0-9-]+$",
+                        "Só minúsculas, números e hífen"
+                      ],
+                      "hint": "Ex.: 150-400. Só letras minúsculas, números e hífen; não aparece no site. As mensagens guardam o texto da opção no idioma do visitante."
+                    },
+                    {
+                      "name": "rotulo",
+                      "label": "Texto da opção",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "trabalhos",
+      "label": "Trabalhos, projeto e 404",
+      "icon": "grid_view",
+      "editor": {
+        "preview": false
+      },
+      "files": [
+        {
+          "name": "trabalhos",
+          "label": "Página Trabalhos, projetos e 404",
+          "file": "src/content/config/trabalhos.json",
+          "fields": [
+            {
+              "name": "tituloAba",
+              "label": "Título da aba",
+              "widget": "object",
+              "collapsed": false,
+              "fields": [
+                {
+                  "name": "pt",
+                  "label": "Português",
+                  "widget": "string",
+                  "required": true
+                },
+                {
+                  "name": "en",
+                  "label": "English",
+                  "widget": "string",
+                  "required": false
+                },
+                {
+                  "name": "es",
+                  "label": "Español",
+                  "widget": "string",
+                  "required": false
+                }
+              ]
+            },
+            {
+              "name": "titulo",
+              "label": "Título",
+              "widget": "object",
+              "collapsed": false,
+              "fields": [
+                {
+                  "name": "pt",
+                  "label": "Português",
+                  "widget": "string",
+                  "required": true
+                },
+                {
+                  "name": "en",
+                  "label": "English",
+                  "widget": "string",
+                  "required": false
+                },
+                {
+                  "name": "es",
+                  "label": "Español",
+                  "widget": "string",
+                  "required": false
+                }
+              ]
+            },
+            {
+              "name": "texto",
+              "label": "Texto",
+              "widget": "object",
+              "collapsed": false,
+              "fields": [
+                {
+                  "name": "pt",
+                  "label": "Português",
+                  "widget": "text",
+                  "required": true
+                },
+                {
+                  "name": "en",
+                  "label": "English",
+                  "widget": "text",
+                  "required": false
+                },
+                {
+                  "name": "es",
+                  "label": "Español",
+                  "widget": "text",
+                  "required": false
+                }
+              ]
+            },
+            {
+              "name": "filtros",
+              "label": "Filtros por área",
+              "widget": "object",
+              "fields": [
+                {
+                  "name": "rotuloGrupo",
+                  "label": "Rótulo do grupo (acessibilidade)",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": true
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ]
+                },
+                {
+                  "name": "todos",
+                  "label": "Botão \"Todos\"",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": true
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ]
+                },
+                {
+                  "name": "areas",
+                  "label": "Áreas",
+                  "widget": "list",
+                  "summary": "{{rotulo.pt}}",
+                  "hint": "Áreas sem projeto publicado não aparecem. Para remover uma área, tire-a antes dos projetos que a usam.",
+                  "fields": [
+                    {
+                      "name": "id",
+                      "label": "Identificador",
+                      "widget": "string",
+                      "pattern": [
+                        "^[a-z0-9-]+$",
+                        "Só minúsculas, números e hífen"
+                      ],
+                      "hint": "Não mude depois de criar."
+                    },
+                    {
+                      "name": "rotulo",
+                      "label": "Nome",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "projeto",
+              "label": "Página de projeto",
+              "widget": "object",
+              "fields": [
+                {
+                  "name": "categoria",
+                  "label": "\"Categoria\"",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": true
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ]
+                },
+                {
+                  "name": "ano",
+                  "label": "\"Ano\"",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": true
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ]
+                },
+                {
+                  "name": "sobre",
+                  "label": "\"Sobre o projeto\"",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": true
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ]
+                },
+                {
+                  "name": "galeria",
+                  "label": "\"Galeria\"",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": true
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ]
+                },
+                {
+                  "name": "maisProjetos",
+                  "label": "\"Mais projetos\"",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": true
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ]
+                },
+                {
+                  "name": "area",
+                  "label": "\"Área\"",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": true
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ]
+                },
+                {
+                  "name": "verProjeto",
+                  "label": "\"Ver projeto\" (cards de Trabalhos e de Mais projetos)",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": true
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ]
+                },
+                {
+                  "name": "liveView",
+                  "label": "Botão \"Live View\" (projetos com site ao vivo)",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": true
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "naoEncontrado",
+              "label": "Página não encontrada (404)",
+              "widget": "object",
+              "fields": [
+                {
+                  "name": "tituloAba",
+                  "label": "Título da aba",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": true
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ]
+                },
+                {
+                  "name": "titulo",
+                  "label": "Título",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": true
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ],
+                  "hint": "A primeira e a última palavra ficam em rosa."
+                },
+                {
+                  "name": "texto",
+                  "label": "Texto",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": true
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ]
+                },
+                {
+                  "name": "botao",
+                  "label": "Botão",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": true
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "site",
+      "label": "Menu, rodapé e redes",
+      "icon": "tune",
+      "editor": {
+        "preview": false
+      },
+      "files": [
+        {
+          "name": "site",
+          "label": "Site (menu, rodapé, redes)",
+          "file": "src/content/config/site.json",
+          "media_folder": "/public/uploads/site",
+          "public_folder": "/uploads/site",
+          "fields": [
+            {
+              "name": "nome",
+              "label": "Nome do site",
+              "widget": "string"
+            },
+            {
+              "name": "favicon",
+              "label": "Ícone da aba",
+              "widget": "image",
+              "hint": "Imagem quadrada PNG, de preferência 512x512."
+            },
+            {
+              "name": "seletorIdioma",
+              "label": "Mostrar seletor de idioma no menu",
+              "widget": "boolean",
+              "default": true
+            },
+            {
+              "name": "descricao",
+              "label": "Descrição do site (buscadores)",
+              "widget": "object",
+              "collapsed": false,
+              "fields": [
+                {
+                  "name": "pt",
+                  "label": "Português",
+                  "widget": "text",
+                  "required": true
+                },
+                {
+                  "name": "en",
+                  "label": "English",
+                  "widget": "text",
+                  "required": false
+                },
+                {
+                  "name": "es",
+                  "label": "Español",
+                  "widget": "text",
+                  "required": false
+                }
+              ],
+              "hint": "Aparece no Google e ao compartilhar o link. Ideal: de 70 a 160 letras."
+            },
+            {
+              "name": "seo",
+              "label": "SEO da Home",
+              "widget": "object",
+              "required": false,
+              "fields": [
+                {
+                  "name": "titulo",
+                  "label": "Título da Home nos buscadores",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ],
+                  "hint": "Ex.: Elliot Parker | Motion designer e editor de vídeo. Vazio: usa o nome do site. Ideal: até 60 letras.",
+                  "required": false
+                },
+                {
+                  "name": "imagem",
+                  "label": "Imagem de compartilhamento",
+                  "widget": "image",
+                  "required": false,
+                  "hint": "Aparece ao colar o link do site no WhatsApp ou LinkedIn. Ideal: 1200x630. Vazio: usa a capa do primeiro projeto."
+                }
+              ]
+            },
+            {
+              "name": "contato",
+              "label": "Contato",
+              "widget": "object",
+              "fields": [
+                {
+                  "name": "whatsapp",
+                  "label": "Link do WhatsApp",
+                  "widget": "string"
+                },
+                {
+                  "name": "whatsappRotulo",
+                  "label": "Texto do WhatsApp",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": true
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "redes",
+              "label": "Redes",
+              "widget": "object",
+              "fields": [
+                {
+                  "name": "instagram",
+                  "label": "Instagram",
+                  "widget": "string"
+                },
+                {
+                  "name": "linkedin",
+                  "label": "LinkedIn",
+                  "widget": "string"
+                },
+                {
+                  "name": "youtube",
+                  "label": "YouTube",
+                  "widget": "string"
+                }
+              ]
+            },
+            {
+              "name": "menu",
+              "label": "Menu (arraste para ordenar)",
+              "widget": "list",
+              "summary": "{{rotulo.pt}}",
+              "fields": [
+                {
+                  "name": "rotulo",
+                  "label": "Texto",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": true
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ]
+                },
+                {
+                  "name": "link",
+                  "label": "Link",
+                  "widget": "string",
+                  "hint": "Ex.: / (Home), /#projects, /#bio-section, /#services, /#contact, /work"
+                }
+              ]
+            },
+            {
+              "name": "rodape",
+              "label": "Rodapé",
+              "widget": "object",
+              "fields": [
+                {
+                  "name": "agradecimento",
+                  "label": "Agradecimento",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": true
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ]
+                },
+                {
+                  "name": "creditos",
+                  "label": "Créditos (linha pequena acima do nome)",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ],
+                  "hint": "Vazio: a linha não aparece.",
+                  "required": false
+                },
+                {
+                  "name": "linksTitulo",
+                  "label": "Título dos links",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": true
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ]
+                },
+                {
+                  "name": "contatoTitulo",
+                  "label": "Título do contato",
+                  "widget": "object",
+                  "collapsed": false,
+                  "fields": [
+                    {
+                      "name": "pt",
+                      "label": "Português",
+                      "widget": "string",
+                      "required": true
+                    },
+                    {
+                      "name": "en",
+                      "label": "English",
+                      "widget": "string",
+                      "required": false
+                    },
+                    {
+                      "name": "es",
+                      "label": "Español",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ]
+                },
+                {
+                  "name": "links",
+                  "label": "Links",
+                  "widget": "list",
+                  "summary": "{{rotulo.pt}}",
+                  "fields": [
+                    {
+                      "name": "rotulo",
+                      "label": "Texto",
+                      "widget": "object",
+                      "collapsed": false,
+                      "fields": [
+                        {
+                          "name": "pt",
+                          "label": "Português",
+                          "widget": "string",
+                          "required": true
+                        },
+                        {
+                          "name": "en",
+                          "label": "English",
+                          "widget": "string",
+                          "required": false
+                        },
+                        {
+                          "name": "es",
+                          "label": "Español",
+                          "widget": "string",
+                          "required": false
+                        }
+                      ]
+                    },
+                    {
+                      "name": "link",
+                      "label": "Link",
+                      "widget": "string",
+                      "hint": "Ex.: / (Home), /#projects, /#bio-section, /#services, /#contact, /work"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
