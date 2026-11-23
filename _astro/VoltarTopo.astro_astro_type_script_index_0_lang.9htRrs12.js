@@ -1,0 +1,1 @@
+import{o as e}from"./animacoes.DhwooHEf.js";var t=document.querySelector(`[data-voltar-topo]`);if(t){let n=()=>t.classList.toggle(`visivel`,scrollY>innerHeight);addEventListener(`scroll`,n,{passive:!0}),n(),t.addEventListener(`click`,()=>{e(0,!0),document.querySelector(`.menu .logo`)?.focus({preventScroll:!0})})}
